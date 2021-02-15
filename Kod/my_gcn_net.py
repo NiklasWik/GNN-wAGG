@@ -65,7 +65,8 @@ class MyGraphNetwork(nn.Module):
         # calculating label weights for weighted loss computation
         V = label.size(0)
         label_count = torch.bincount(label)
-        label_count = label_count[label_count.nonzero()].squeeze()
+        #label_count = label_count[label_count.nonzero()].squeeze()
+        label_count = label_count[torch.nonzero(label_count, as_tuple=False)].squeeze()
         cluster_sizes = torch.zeros(self.n_classes).long().to(self.device)
         cluster_sizes[torch.unique(label)] = label_count
         weight = (V - cluster_sizes).float() / V
