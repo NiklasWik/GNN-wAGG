@@ -66,14 +66,17 @@ class GIN_MOD_linear_Layer(nn.Module):
         self.bn_node_h = nn.BatchNorm1d(out_dim)
 
         self.A = nn.Parameter(torch.FloatTensor(out_dim, in_dim))
-        self.bias = nn.Parameter(torch.FloatTensor(out_features))
+        self.bias = nn.Parameter(torch.FloatTensor(out_dim))
+        self.register_buffer('diag', torch.FloatTensor(torch.FloatTensor(torch.eye(in_dim)*1e-1)))
 
     # New reduce function. p-norm
     def reduce_func(self, nodes):        
-        h = F.linear(nodes.mailbox['m'], self.A, self.bias)
-        if in_dim != out_dim:
-          return {'neigh': torch.sum(h, dim=1)}
-        return {'neigh': f.linear(torch.sum(h, dim=1)-self.bias,torch.linalg.inv(self.A))}
+      if not self.residual:
+        return {'neigh': torch.sum(h, dim=1)}
+      A = self.A + self.diag
+      h = F.linear(nodes.mailbox['m'], A, self.bias)
+      
+      return {'neigh': F.linear(torch.sum(h, dim=1),torch.inverse(A))}
 
     def forward(self, g, h):
         h_in = h # for residual connection
