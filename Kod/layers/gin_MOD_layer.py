@@ -34,18 +34,9 @@ class GIN_MOD_Layer(nn.Module):
         If True, :math:`\epsilon` will be a learnable parameter.
     
     """
-    def __init__(self, apply_func, aggr_type, dropout, batch_norm, residual=False, init_eps=0, learn_eps=False):
+    def __init__(self, apply_func, dropout, batch_norm, residual=False, init_eps=0, learn_eps=False):
         super().__init__()
         self.apply_func = apply_func
-        
-        if aggr_type == 'sum':
-            self._reducer = fn.sum
-        elif aggr_type == 'max':
-            self._reducer = fn.max
-        elif aggr_type == 'mean':
-            self._reducer = fn.mean
-        else:
-            raise KeyError('Aggregator type {} not recognized.'.format(aggr_type))
             
         self.batch_norm = batch_norm
         self.residual = residual
