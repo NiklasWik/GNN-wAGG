@@ -76,7 +76,7 @@ class GIN_MOD_linear_Layer(nn.Module):
     def reduce_func(self, nodes):  
         A = torch.exp(self.A) # non-zero
         h = A * nodes.mailbox['m'] + self.bias
-        return {'neigh': (torch.sum(h, dim=1)-self.bias) / A}
+        return {'neigh': (torch.sum(h, dim=1)-self.bias) / (A + 1e-6)}
       #if not self.residual:
       #  return {'neigh': torch.sum(h, dim=1)}
       #A = self.A + self.diag
