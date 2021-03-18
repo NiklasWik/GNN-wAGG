@@ -62,7 +62,8 @@ class GIN_MOD_Layer(nn.Module):
     def reduce_func(self, nodes):
         P = torch.clamp(self.p,0.5,5)
         #h = (F.relu(nodes.mailbox['m'])).pow(P)
-        h = torch.abs(nodes.mailbox['m']).pow(P)
+        h = torch.abs(nodes.mailbox['m'])
+        h = h.pow(P)
 
         return {'neigh': torch.sum(h, dim=1).pow(1/P)}
 
