@@ -66,7 +66,7 @@ class GIN_MOD_linear_Layer(nn.Module):
         self.bn_node_h = nn.BatchNorm1d(out_dim)
 
         self.A = nn.Parameter(torch.FloatTensor(in_dim))
-        self.bias = nn.Parameter(torch.FloatTensor(out_dim))
+        self.bias = nn.Parameter(torch.FloatTensor(in_dim))
 
         #self.A = nn.Parameter(torch.FloatTensor(out_dim, in_dim))
         #self.bias = nn.Parameter(torch.FloatTensor(out_dim))
