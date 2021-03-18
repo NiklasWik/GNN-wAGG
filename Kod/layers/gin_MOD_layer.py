@@ -60,11 +60,11 @@ class GIN_MOD_Layer(nn.Module):
 
     # New reduce function. p-norm
     def reduce_func(self, nodes):
-        P = torch.clamp(self.p,1,2)
+        #P = torch.clamp(self.p,1,2)
         #h = (F.relu(nodes.mailbox['m'])).pow(P)
-        h = torch.abs(nodes.mailbox['m']).pow(P)
+        #h = torch.abs(nodes.mailbox['m']).pow(P)
 
-        return {'neigh': torch.sum(h, dim=1).pow(torch.div(1,P))}
+        return {'neigh': torch.sum(torch.abs(nodes.mailbox['m']).pow(torch.clamp(self.p,1,2)), dim=1).pow(torch.div(1,torch.clamp(self.p,1,2)))}
 
     def forward(self, g, h):
         h_in = h # for residual connection
