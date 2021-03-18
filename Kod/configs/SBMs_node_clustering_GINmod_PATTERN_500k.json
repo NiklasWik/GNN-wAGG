@@ -24,7 +24,7 @@
     
     "net_params": {
         "L": 16,
-        "hidden_dim": 124,
+        "hidden_dim": 110,
         "residual": true,
         "readout": "sum",
         "n_mlp_GIN": 2,
