@@ -38,7 +38,7 @@ class GIN_mod_Net(nn.Module):
         for layer in range(self.n_layers):
             mlp = MLP(n_mlp_layers, hidden_dim, hidden_dim, hidden_dim)
             
-            self.ginlayers.append(GIN_MOD_Layer(ApplyNodeFunc(mlp), neighbor_aggr_type,
+            self.ginlayers.append(GIN_MOD_Layer(ApplyNodeFunc(mlp),
                                            dropout, batch_norm, residual, 0, learn_eps))
 
         # Linear function for output of each layer
