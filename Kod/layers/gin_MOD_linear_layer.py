@@ -74,8 +74,6 @@ class GIN_MOD_linear_Layer(nn.Module):
 
     # New reduce function. p-norm
     def reduce_func(self, nodes):  
-        if not self.residual:
-            return {'neigh': torch.sum(h, dim=1)}
         A = torch.exp(self.A) # non-zero
         h = A * nodes.mailbox['m'] + self.bias
         return {'neigh': (torch.sum(h, dim=1)-self.bias) / A}
