@@ -24,7 +24,6 @@ class GIN_mod_Net(nn.Module):
         self.n_layers = net_params['L']
         n_mlp_layers = net_params['n_mlp_GIN']               # GIN
         learn_eps = net_params['learn_eps_GIN']              # GIN
-        neighbor_aggr_type = net_params['neighbor_aggr_GIN'] # GIN
         readout = net_params['readout']                      # this is graph_pooling_type    
         batch_norm = net_params['batch_norm']
         residual = net_params['residual']
