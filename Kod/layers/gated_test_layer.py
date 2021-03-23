@@ -45,7 +45,7 @@ class GatedTestLayer(nn.Module):
         u = torch.exp(self.u)
         w = torch.exp(self.w)
         msg = torch.abs(nodes.mailbox['m'])
-        fsum = torch.sum(u*F.sigmoid(w*msg+self.b), dim=1)
+        fsum = torch.sum(u*torch.sigmoid(w*msg+self.b), dim=1)
         sig_in = fsum/u
         out_h = (torch.log(sig_in/(1-sig_in))-self.b)/w
         return {'sum_sigma_h': out_h}
