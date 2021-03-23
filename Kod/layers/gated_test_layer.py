@@ -41,12 +41,11 @@ class GatedTestLayer(nn.Module):
     
 
     def fmean(self, nodes):
-
         u = torch.exp(self.u)
         w = torch.exp(self.w)
         msg = torch.abs(nodes.mailbox['m'])
         fsum = torch.sum(u*torch.sigmoid(w*msg+self.b), dim=1)
-        sig_in = fsum/u
+        sig_in = torch.clamp(fsum/u, 0.1, 0.9)
         out_h = (torch.log(sig_in/(1-sig_in))-self.b)/w
         return {'sum_sigma_h': out_h}
 
