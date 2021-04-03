@@ -57,6 +57,8 @@ def gpu_setup(use_gpu, gpu_id):
     if torch.cuda.is_available() and use_gpu:
         print('cuda available with GPU:',torch.cuda.get_device_name(0))
         device = torch.device("cuda")
+        print('in main script, attempt to clear memory at line 60: torch.cuda.empty_cache()')
+        torch.cuda.empty_cache()
     else:
         print('cuda not available')
         device = torch.device("cpu")
