@@ -32,10 +32,10 @@ class GatedTestLayer(nn.Module):
         self.bn_node_h = nn.BatchNorm1d(output_dim)
         self.bn_node_e = nn.BatchNorm1d(output_dim)
 
-        #self.P = nn.Parameter(torch.rand(output_dim)*1e-3+1)
+        self.P = nn.Parameter(torch.rand(output_dim)*1e-3+1)
 
-        self.w = nn.Parameter(torch.rand(output_dim)+1)
-        self.b = nn.Parameter(torch.rand(1)+1)
+        #self.w = nn.Parameter(torch.rand(output_dim)+1)
+        #self.b = nn.Parameter(torch.rand(1)+1)
 
     
 
