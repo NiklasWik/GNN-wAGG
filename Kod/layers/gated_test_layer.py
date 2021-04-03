@@ -127,9 +127,6 @@ class GatedTestLayer(nn.Module):
         h = F.relu(h) # non-linear activation
         e = F.relu(e) # non-linear activation
 
-        print('in layer, attempt to clear memory at line 60: torch.cuda.empty_cache()')
-        torch.cuda.empty_cache()
-        
         if self.residual:
             h = h_in + h # residual connection
             e = e_in + e # residual connection
