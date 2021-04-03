@@ -118,7 +118,7 @@ class GatedTestLayer(nn.Module):
         g.edata['e']  = e 
         g.edata['Ce'] = self.C(e) 
 
-        h, e = self.update_all_fp(g)
+        h, e = self.update_all_p_norm(g)
         
         if self.batch_norm:
             h = self.bn_node_h(h) # batch normalization  
