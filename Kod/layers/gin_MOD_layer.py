@@ -60,10 +60,9 @@ class GIN_MOD_Layer(nn.Module):
 
     # New reduce function. p-norm
     def reduce_func(self, nodes):
-        P = torch.clamp(self.p,0.5,5)
+        P = torch.clamp(self.p,1,100)
         #h = (F.relu(nodes.mailbox['m'])).pow(P)
-        h = torch.abs(nodes.mailbox['m'])
-        h = h.pow(P)
+        h = torch.abs(nodes.mailbox['m']).pow(P)
 
         return {'neigh': torch.sum(h, dim=1).pow(1/P)}
 
