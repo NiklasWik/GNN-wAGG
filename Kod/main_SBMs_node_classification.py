@@ -94,6 +94,8 @@ def train_val_pipeline(MODEL_NAME, dataset, params, net_params, dirs):
     
     start0 = time.time()
     per_epoch_time = []
+    trainvec = []
+    testvec = []
     
     DATASET_NAME = dataset.name
     
@@ -181,6 +183,8 @@ def train_val_pipeline(MODEL_NAME, dataset, params, net_params, dirs):
                 epoch_val_losses.append(epoch_val_loss)
                 epoch_train_accs.append(epoch_train_acc)
                 epoch_val_accs.append(epoch_val_acc)
+                trainvec.append(epoch_train_acc)
+                testvec.append(epoch_test_acc)
 
                 writer.add_scalar('train/_loss', epoch_train_loss, epoch)
                 writer.add_scalar('val/_loss', epoch_val_loss, epoch)
@@ -225,7 +229,8 @@ def train_val_pipeline(MODEL_NAME, dataset, params, net_params, dirs):
         print('-' * 89)
         print('Exiting from training early because of KeyboardInterrupt')
     
-    
+    np.savetxt("trainvec.txt",trainvec)
+    np.savetxt("testvec.txt",testvec)
     _, test_acc = evaluate_network(model, device, test_loader, epoch)
     _, train_acc = evaluate_network(model, device, train_loader, epoch)
     print("Test Accuracy: {:.4f}".format(test_acc))
