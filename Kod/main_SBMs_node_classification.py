@@ -229,6 +229,8 @@ def train_val_pipeline(MODEL_NAME, dataset, params, net_params, dirs):
         print('-' * 89)
         print('Exiting from training early because of KeyboardInterrupt')
     
+    import scipy.io as sio
+    sio.savemat('accs.mat', dict(training=trainvec, testing=testvec))
     np.savetxt("trainvec.txt",trainvec)
     np.savetxt("testvec.txt",testvec)
     _, test_acc = evaluate_network(model, device, test_loader, epoch)
