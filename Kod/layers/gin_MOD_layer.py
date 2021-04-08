@@ -39,11 +39,7 @@ class GIN_MOD_Layer(nn.Module):
         self.apply_func = apply_func
             
         if aggr_type == 'sum':
-            self._reducer = fn.sum
-        elif aggr_type == 'max':
-            self._reducer = fn.max
-        elif aggr_type == 'mean':
-            self._reducer = fn.mean
+            self._reducer = self.reduce_sum
         elif aggr_type == 'pnorm':
             self._reducer = self.reduce_p
         else:
@@ -69,7 +65,9 @@ class GIN_MOD_Layer(nn.Module):
 
         self.p = nn.Parameter(torch.rand(in_dim)*6+1)
 
-    # New reduce function. p-norm
+    def reduce_sum(self, nodes):
+        return {'neigh': torch.sum(nodes.mailbox['m'], dim=1)}
+    
     def reduce_p(self, nodes):
         p = torch.clamp(self.P,1,100)
         #h = torch.abs(nodes.mailbox['m']).pow(P)
