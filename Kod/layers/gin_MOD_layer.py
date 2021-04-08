@@ -38,6 +38,17 @@ class GIN_MOD_Layer(nn.Module):
         super().__init__()
         self.apply_func = apply_func
             
+        if aggr_type == 'sum':
+            self._reducer = fn.sum
+        elif aggr_type == 'max':
+            self._reducer = fn.max
+        elif aggr_type == 'mean':
+            self._reducer = fn.mean
+        elif aggr_type == 'pnorm':
+            self._reducer = self.reduce_p
+        else:
+            raise KeyError('Aggregator type {} not recognized.'.format(aggr_type))
+        
         self.batch_norm = batch_norm
         self.residual = residual
         self.dropout = dropout
@@ -59,20 +70,20 @@ class GIN_MOD_Layer(nn.Module):
         self.p = nn.Parameter(torch.rand(in_dim)*6+1)
 
     # New reduce function. p-norm
-    def reduce_func(self, nodes):
-        P = torch.clamp(self.p,1,100)
-        #h = (F.relu(nodes.mailbox['m'])).pow(P)
+    def reduce_p(self, nodes):
+        p = torch.clamp(self.P,1,100)
         #h = torch.abs(nodes.mailbox['m']).pow(P)
-        h = torch.exp(nodes.mailbox['m']).pow(P)
-
-        return {'neigh': torch.sum(h, dim=1).pow(1/P)}
+        h = torch.exp(nodes.mailbox['m'])
+        alpha = torch.max(h)
+        h = (h/alpha).pow(p)
+        return {'neigh': (torch.sum(h, dim=1).pow(1/p))*alpha}
 
     def forward(self, g, h):
         h_in = h # for residual connection
         
         g = g.local_var()
         g.ndata['h'] = h
-        g.update_all(fn.copy_u('h', 'm'), self.reduce_func)
+        g.update_all(fn.copy_u('h', 'm'), self._reducer)
         h = (1 + self.eps) * h + g.ndata['neigh']
         if self.apply_func is not None:
             h = self.apply_func(h)
