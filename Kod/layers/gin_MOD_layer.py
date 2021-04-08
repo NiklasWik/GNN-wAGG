@@ -37,14 +37,6 @@ class GIN_MOD_Layer(nn.Module):
     def __init__(self, apply_func, aggr_type, dropout, batch_norm, residual=False, init_eps=0, learn_eps=False):
         super().__init__()
         self.apply_func = apply_func
-            
-        if aggr_type == 'sum':
-            self._reducer = self.reduce_sum
-        elif aggr_type == 'pnorm':
-            self._reducer = self.reduce_p
-            self.p = nn.Parameter(torch.rand(in_dim)*6+1)
-        else:
-            raise KeyError('Aggregator type {} not recognized.'.format(aggr_type))
         
         self.batch_norm = batch_norm
         self.residual = residual
@@ -52,7 +44,15 @@ class GIN_MOD_Layer(nn.Module):
         
         in_dim = apply_func.mlp.input_dim
         out_dim = apply_func.mlp.output_dim
-        
+
+        if aggr_type == 'sum':
+            self._reducer = self.reduce_sum
+        elif aggr_type == 'pnorm':
+            self._reducer = self.reduce_p
+            self.p = nn.Parameter(torch.rand(in_dim)*6+1)
+        else:
+            raise KeyError('Aggregator type {} not recognized.'.format(aggr_type))
+
         if in_dim != out_dim:
             self.residual = False
             
