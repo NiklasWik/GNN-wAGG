@@ -79,7 +79,7 @@ class GatedTestLayer(nn.Module):
         g.edata['e'] = g.edata['DEh'] + g.edata['Ce']
         g.edata['sigma'] = torch.sigmoid(g.edata['e']) 
         g.update_all(fn.copy_e('sigma', 'm'), fn.sum('m', 'sum_sigma')) 
-        g.ndata['eee'] = g.ndata['sigma'] / (g.ndata['sum_sigma'] + 1e-6)
+        g.ndata['eee'] = g.edata['sigma'] / (g.ndata['sum_sigma'] + 1e-6)
         g.update_all(fn.u_mul_e('Bh', 'eee', 'm'), self._reducer) 
         g.ndata['h'] = g.ndata['Ah'] + g.ndata['sum_sigma_h'] 
 
