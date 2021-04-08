@@ -85,17 +85,16 @@ class GatedTestLayer(nn.Module):
         
         graph.apply_edges(fn.u_add_v('Dh', 'Eh', 'DEh'))
         graph.edata['e'] = graph.edata['DEh'] + graph.edata['Ce']
-        graph.edata['sigma'] = torch.sigmoid(graph.edata['e']) # n_{ij}
+        graph.edata['sigma'] = torch.sigmoid(graph.edata['e']) 
 
         alpha = torch.max(torch.abs(torch.cat((graph.ndata['Bh'],graph.edata['sigma']), dim=0)))
 
         graph.ndata['Bh_pow'] = (torch.abs(graph.ndata['Bh'])/alpha).pow(p)
         graph.edata['sig_pow'] = (torch.abs(graph.edata['sigma'])/alpha).pow(p)
-        graph.update_all(fn.u_mul_e('Bh_pow', 'sig_pow', 'm'), fn.sum('m', 'sum_sigma_h')) # u_mul_e = elementwise mul. Output "m" = n_{ij}***Vh. Then sum! 
-                                                                                 # Update_all - send messages through all edges and update all nodes.
-        
-        graph.update_all(fn.copy_e('sig_pow', 'm'), fn.sum('m', 'sum_sigma')) # copy_e - eqv to 'm': graph.edata['sigma']. Output "m". Then sum. 
-                                                                        # Again, send messages and update all nodes. Why do this step?????
+        graph.update_all(fn.u_mul_e('Bh_pow', 'sig_pow', 'm'), fn.sum('m', 'sum_sigma_h')) 
+                                                                                 
+        graph.update_all(fn.copy_e('sig_pow', 'm'), fn.sum('m', 'sum_sigma')) 
+                                                                        
         
         graph.ndata['h'] = graph.ndata['Ah'] + ((graph.ndata['sum_sigma_h'] / (graph.ndata['sum_sigma'] + 1e-6))*alpha).pow(torch.div(1,p)) # Uh + sum()
 
