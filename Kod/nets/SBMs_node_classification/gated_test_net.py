@@ -22,6 +22,7 @@ class GatedTestNet(nn.Module):
         in_dim_edge = 1 # edge_dim (feat is a float)
         hidden_dim = net_params['hidden_dim']
         n_classes = net_params['n_classes']
+        neighbor_aggr_type = net_params['neighbor_aggr'] 
         dropout = net_params['dropout']
         n_layers = net_params['L']
         self.readout = net_params['readout']
@@ -37,7 +38,7 @@ class GatedTestNet(nn.Module):
         self.embedding_h = nn.Embedding(in_dim_node, hidden_dim) # node feat is an integer
         self.embedding_e = nn.Linear(in_dim_edge, hidden_dim) # edge feat is a float
         self.layers = nn.ModuleList([GatedTestLayer(hidden_dim, hidden_dim, dropout,
-                                                    self.batch_norm, self.residual) for _ in range(n_layers) ])
+                                                    self.batch_norm, self.residual, neighbor_aggr_type) for _ in range(n_layers) ])
         self.MLP_layer = MLPReadout(hidden_dim, n_classes)
         
 

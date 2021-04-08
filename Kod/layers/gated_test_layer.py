@@ -13,7 +13,7 @@ class GatedTestLayer(nn.Module):
     """
         Param: []
     """
-    def __init__(self, input_dim, output_dim, dropout, batch_norm, residual=False):
+    def __init__(self, input_dim, output_dim, dropout, batch_norm, residual=False, aggr_type):
         super().__init__()
         self.in_channels = input_dim
         self.out_channels = output_dim
@@ -21,6 +21,16 @@ class GatedTestLayer(nn.Module):
         self.batch_norm = batch_norm
         self.residual = residual
         
+        if aggr_type == "pnorm":
+            self._reducer = self.reduce_p
+            self.P = nn.Parameter(torch.rand(output_dim)*6+1)
+        elif aggr_type == "planar":
+            self._reducer = self.reduce_fp
+            self.w = nn.Parameter(torch.rand(output_dim)+1)
+            self.b = nn.Parameter(torch.rand(1)+1)
+        else:
+            self._reducer = self.reduce_lame
+
         if input_dim != output_dim:
             self.residual = False
         
@@ -32,42 +42,17 @@ class GatedTestLayer(nn.Module):
         self.bn_node_h = nn.BatchNorm1d(output_dim)
         self.bn_node_e = nn.BatchNorm1d(output_dim)
 
-        self.P = nn.Parameter(torch.rand(output_dim)*1e-3+1)
+    def reduce_lame(self, nodes):
+        print("pick fukken aggrfunc")
+        return {'sum_sigma_h': torch.sum(nodes.mailbox['m'])}
 
-        #self.w = nn.Parameter(torch.rand(output_dim)+1)
-        #self.b = nn.Parameter(torch.rand(1)+1)
-
-    
-
-    def fmean(self, nodes):
+    def reduce_fp(self, nodes):
         w = torch.exp(self.w)
         msg = torch.abs(nodes.mailbox['m'])
         fsum = torch.sum(torch.sigmoid(w*msg+self.b), dim=1)
-        sig_in = torch.clamp(fsum, 0.1, 0.9)
+        sig_in = torch.clamp(fsum, 0.001, 0.999)
         out_h = (torch.log(sig_in/(1-sig_in))-self.b)/w
         return {'sum_sigma_h': out_h}
-
-    #sigmaINV((sum(u*sigma(w*m+b)/u)/(1+sum(u*sigma(w*m+b)/u))-b)/w
-    def update_all_fp(self, graph):
-
-        
-        graph.apply_edges(fn.u_add_v('Dh', 'Eh', 'DEh'))
-
-        graph.edata['e'] = graph.edata['DEh'] + graph.edata['Ce']
-        
-        graph.edata['sigma'] = torch.sigmoid(graph.edata['e']) # n_{ij}
-
-        graph.update_all(fn.u_mul_e('Bh', 'sigma', 'm'), self.fmean)
-
-        graph.update_all(fn.copy_e('sigma', 'm'), fn.sum('m', 'sum_sigma'))
-
-        graph.ndata['h'] = graph.ndata['Ah'] + graph.ndata['sum_sigma_h'] / (graph.ndata['sum_sigma'] + 1e-6)
-        
-        #graph.update_all(self.message_func,self.reduce_func) 
-        h = graph.ndata['h'] # result of graph convolution
-        e = graph.edata['e'] # result of graph convolution
-        # Call update function outside of update_all
-        return h, e
 
     def reduce_p(self,nodes):
         p = torch.clamp(self.P,1,100)
@@ -76,29 +61,6 @@ class GatedTestLayer(nn.Module):
         alpha = torch.max(h, dim=0))
         h = (h/alpha).pow(p)
         return {'sum_sigma_h': (torch.sum(h, dim=1).pow(1/p))*alpha}
-
-    def update_all_p_norm(self, graph):
-
-        p = torch.clamp(self.P,1,100)
-        
-
-        graph.update_all(fn.copy_e('sigma', 'm'), fn.sum('m', 'sum_sigma')) 
-        graph.ndata['eee'] = (graph.ndata['sigma'] / (graph.ndata['sum_sigma'] + 1e-6)
-
-        """ graph.ndata['Bh_pow'] = (torch.abs(graph.ndata['Bh'])/alpha).pow(p)
-        graph.edata['sig_pow'] = (torch.abs(graph.edata['sigma'])/alpha).pow(p) """
-        graph.update_all(fn.u_mul_e('Bh', 'eee', 'm'), self.reduce_p) 
-                                                                                 
-        
-                                                                        
-        
-        graph.ndata['h'] = graph.ndata['Ah'] + graph.ndata['sum_sigma_h'] # Uh + sum()
-
-        #graph.update_all(self.message_func,self.reduce_func) 
-        h = graph.ndata['h'] # result of graph convolution
-        e = graph.edata['e'] # result of graph convolution
-        # Call update function outside of update_all
-        return h, e
 
     def forward(self, g, h, e):
         
@@ -116,7 +78,12 @@ class GatedTestLayer(nn.Module):
         graph.apply_edges(fn.u_add_v('Dh', 'Eh', 'DEh'))
         graph.edata['e'] = graph.edata['DEh'] + graph.edata['Ce']
         graph.edata['sigma'] = torch.sigmoid(graph.edata['e']) 
-        h, e = self.update_all_p_norm(g)
+        graph.update_all(fn.copy_e('sigma', 'm'), fn.sum('m', 'sum_sigma')) 
+        graph.ndata['eee'] = (graph.ndata['sigma'] / (graph.ndata['sum_sigma'] + 1e-6)
+        graph.update_all(fn.u_mul_e('Bh', 'eee', 'm'), self._reducer) 
+        graph.ndata['h'] = graph.ndata['Ah'] + graph.ndata['sum_sigma_h'] 
+
+        #h, e = self.update_all_p_norm(g)
         
         if self.batch_norm:
             h = self.bn_node_h(h) # batch normalization  
