@@ -74,9 +74,13 @@ class GIN_MOD_Layer(nn.Module):
         h = torch.abs(nodes.mailbox['m'])
         #h = nodes.mailbox['m'] - torch.min(h) + 1e-6
         #h = torch.exp(nodes.mailbox['m'])
-        alpha = torch.max(h)
+        
+        h = h.pow(p)
+        return {'neigh': (torch.sum(h, dim=1).pow(1/p))}
+
+        """ alpha = torch.max(h)
         h = (h/alpha).pow(p)
-        return {'neigh': (torch.sum(h, dim=1).pow(1/p))*alpha}
+        return {'neigh': (torch.sum(h, dim=1).pow(1/p))*alpha} """
 
     def forward(self, g, h):
         h_in = h # for residual connection
