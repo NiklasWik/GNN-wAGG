@@ -72,6 +72,7 @@ class GIN_MOD_Layer(nn.Module):
     def reduce_p(self, nodes):
         p = torch.clamp(self.p,1,100)
         h = torch.abs(nodes.mailbox['m'])
+        #h = nodes.mailbox['m'] - torch.min(h) + 1e-6
         #h = torch.exp(nodes.mailbox['m'])
         alpha = torch.max(h)
         h = (h/alpha).pow(p)

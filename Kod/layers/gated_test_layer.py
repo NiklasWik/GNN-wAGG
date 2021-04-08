@@ -55,8 +55,8 @@ class GatedTestLayer(nn.Module):
 
     def reduce_p(self,nodes):
         p = torch.clamp(self.P,1,100)
-        #h = torch.abs(nodes.mailbox['m']).pow(P)
         h = torch.abs(nodes.mailbox['m'])
+        #h = torch.exp(nodes.mailbox['m'])
         alpha = torch.max(h)
         h = (h/alpha).pow(p)
         return {'sum_sigma_h': (torch.sum(h, dim=1).pow(1/p))*alpha}
@@ -76,10 +76,13 @@ class GatedTestLayer(nn.Module):
 
         g.apply_edges(fn.u_add_v('Dh', 'Eh', 'DEh'))
         g.edata['e'] = g.edata['DEh'] + g.edata['Ce']
-        g.edata['sigma'] = torch.sigmoid(g.edata['e']) 
+        g.edata['sigma'] = torch.sigmoid(g.edata['e'])
         g.update_all(fn.copy_e('sigma', 'm'), fn.sum('m', 'sum_sigma')) 
+
         g.ndata['eee'] = g.ndata['Bh'] / (g.ndata['sum_sigma'] + 1e-6)
+
         g.update_all(fn.u_mul_e('eee', 'sigma', 'm'), self._reducer) 
+
         g.ndata['h'] = g.ndata['Ah'] + g.ndata['sum_sigma_h'] 
 
         #h, e = self.update_all_p_norm(g)
