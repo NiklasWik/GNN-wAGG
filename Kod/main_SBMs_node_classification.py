@@ -354,6 +354,8 @@ def main():
     net_params['device'] = device
     net_params['gpu_id'] = config['gpu']['id']
     net_params['batch_size'] = params['batch_size']
+    if args.neighbor_aggr is not None:
+        net_params['neighbor_aggr'] = int(args.neighbor_aggr)
     if args.L is not None:
         net_params['L'] = int(args.L)
     if args.hidden_dim is not None:
