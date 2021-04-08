@@ -56,7 +56,7 @@ class GatedTestLayer(nn.Module):
     def reduce_p(self,nodes):
         p = torch.clamp(self.P,1,100)
         #h = torch.abs(nodes.mailbox['m']).pow(P)
-        h = torch.abs(nodes.mailbox['m'])
+        h = torch.exp(nodes.mailbox['m'])
         alpha = torch.max(h)
         h = (h/alpha).pow(p)
         return {'sum_sigma_h': (torch.sum(h, dim=1).pow(1/p))*alpha}
