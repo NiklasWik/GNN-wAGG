@@ -56,13 +56,14 @@ class GIN_MOD_Layer(nn.Module):
             
         self.bn_node_h = nn.BatchNorm1d(out_dim)
 
-        self.p = nn.Parameter(torch.rand(in_dim)*1+1)
+        self.p = nn.Parameter(torch.rand(in_dim)*6+1)
 
     # New reduce function. p-norm
     def reduce_func(self, nodes):
         P = torch.clamp(self.p,1,100)
         #h = (F.relu(nodes.mailbox['m'])).pow(P)
-        h = torch.abs(nodes.mailbox['m']).pow(P)
+        #h = torch.abs(nodes.mailbox['m']).pow(P)
+        h = torch.exp(nodes.mailbox['m']).pow(P)
 
         return {'neigh': torch.sum(h, dim=1).pow(1/P)}
 
