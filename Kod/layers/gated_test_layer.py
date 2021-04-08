@@ -13,7 +13,7 @@ class GatedTestLayer(nn.Module):
     """
         Param: []
     """
-    def __init__(self, input_dim, output_dim, dropout, batch_norm, residual=False, aggr_type):
+    def __init__(self, aggr_type, input_dim, output_dim, dropout, batch_norm, residual=False):
         super().__init__()
         self.in_channels = input_dim
         self.out_channels = output_dim
