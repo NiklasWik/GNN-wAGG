@@ -69,34 +69,30 @@ class GatedTestLayer(nn.Module):
         # Call update function outside of update_all
         return h, e
 
+    def reduce_p(self,nodes):
+        p = torch.clamp(self.P,1,100)
+        #h = torch.abs(nodes.mailbox['m']).pow(P)
+        h = torch.exp(nodes.mailbox['m'])
+        alpha = torch.max(h, dim=0))
+        h = (h/alpha).pow(p)
+        return {'sum_sigma_h': (torch.sum(h, dim=1).pow(1/p))*alpha}
+
     def update_all_p_norm(self, graph):
-
-        """ 
-        Attempt at robust p-norm á:
-        def robust_norm(x, p):
-                a = np.abs(x).max()
-                return a * norm1(x / a, p)
-
-            def norm1(x, p):
-                "First-pass implementation of p-norm."
-                return (np.abs(x)**p).sum() ** (1./p) """
 
         p = torch.clamp(self.P,1,100)
         
-        graph.apply_edges(fn.u_add_v('Dh', 'Eh', 'DEh'))
-        graph.edata['e'] = graph.edata['DEh'] + graph.edata['Ce']
-        graph.edata['sigma'] = torch.sigmoid(graph.edata['e']) 
 
-        alpha = torch.max(torch.abs(torch.cat((graph.ndata['Bh'],graph.edata['sigma']), dim=0)))
+        graph.update_all(fn.copy_e('sigma', 'm'), fn.sum('m', 'sum_sigma')) 
+        graph.ndata['eee'] = (graph.ndata['sigma'] / (graph.ndata['sum_sigma'] + 1e-6)
 
-        graph.ndata['Bh_pow'] = (torch.abs(graph.ndata['Bh'])/alpha).pow(p)
-        graph.edata['sig_pow'] = (torch.abs(graph.edata['sigma'])/alpha).pow(p)
-        graph.update_all(fn.u_mul_e('Bh_pow', 'sig_pow', 'm'), fn.sum('m', 'sum_sigma_h')) 
+        """ graph.ndata['Bh_pow'] = (torch.abs(graph.ndata['Bh'])/alpha).pow(p)
+        graph.edata['sig_pow'] = (torch.abs(graph.edata['sigma'])/alpha).pow(p) """
+        graph.update_all(fn.u_mul_e('Bh', 'eee', 'm'), self.reduce_p) 
                                                                                  
-        graph.update_all(fn.copy_e('sig_pow', 'm'), fn.sum('m', 'sum_sigma')) 
+        
                                                                         
         
-        graph.ndata['h'] = graph.ndata['Ah'] + ((graph.ndata['sum_sigma_h'] / (graph.ndata['sum_sigma'] + 1e-6))*alpha).pow(torch.div(1,p)) # Uh + sum()
+        graph.ndata['h'] = graph.ndata['Ah'] + graph.ndata['sum_sigma_h'] # Uh + sum()
 
         #graph.update_all(self.message_func,self.reduce_func) 
         h = graph.ndata['h'] # result of graph convolution
@@ -117,6 +113,9 @@ class GatedTestLayer(nn.Module):
         g.edata['e']  = e 
         g.edata['Ce'] = self.C(e) 
 
+        graph.apply_edges(fn.u_add_v('Dh', 'Eh', 'DEh'))
+        graph.edata['e'] = graph.edata['DEh'] + graph.edata['Ce']
+        graph.edata['sigma'] = torch.sigmoid(graph.edata['e']) 
         h, e = self.update_all_p_norm(g)
         
         if self.batch_norm:
