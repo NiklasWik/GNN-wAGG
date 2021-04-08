@@ -27,7 +27,7 @@
         "hidden_dim": 70,
         "out_dim": 70,
         "residual": true,
-        "neighbor_aggr": "aaa",
+        "neighbor_aggr": "pnorm",
         "edge_feat": false,
         "readout": "mean",
         "in_feat_dropout": 0.0,

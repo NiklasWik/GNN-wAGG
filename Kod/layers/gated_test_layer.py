@@ -43,7 +43,7 @@ class GatedTestLayer(nn.Module):
         self.bn_node_e = nn.BatchNorm1d(output_dim)
 
     def reduce_lame(self, nodes):
-        return {'sum_sigma_h': fn.sum(nodes.mailbox['m'])}
+        return {'sum_sigma_h': torch.sum(nodes.mailbox['m'])}
 
     def reduce_fp(self, nodes):
         w = torch.exp(self.w)
@@ -56,7 +56,7 @@ class GatedTestLayer(nn.Module):
     def reduce_p(self,nodes):
         p = torch.clamp(self.P,1,100)
         #h = torch.abs(nodes.mailbox['m']).pow(P)
-        h = torch.exp(nodes.mailbox['m'])
+        h = torch.abs(nodes.mailbox['m'])
         alpha = torch.max(h)
         h = (h/alpha).pow(p)
         return {'sum_sigma_h': (torch.sum(h, dim=1).pow(1/p))*alpha}
