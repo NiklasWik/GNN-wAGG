@@ -42,6 +42,7 @@ class GIN_MOD_Layer(nn.Module):
             self._reducer = self.reduce_sum
         elif aggr_type == 'pnorm':
             self._reducer = self.reduce_p
+            self.p = nn.Parameter(torch.rand(in_dim)*6+1)
         else:
             raise KeyError('Aggregator type {} not recognized.'.format(aggr_type))
         
@@ -63,13 +64,13 @@ class GIN_MOD_Layer(nn.Module):
             
         self.bn_node_h = nn.BatchNorm1d(out_dim)
 
-        self.p = nn.Parameter(torch.rand(in_dim)*6+1)
+        
 
     def reduce_sum(self, nodes):
         return {'neigh': torch.sum(nodes.mailbox['m'], dim=1)}
     
     def reduce_p(self, nodes):
-        p = torch.clamp(self.P,1,100)
+        p = torch.clamp(self.p,1,100)
         #h = torch.abs(nodes.mailbox['m']).pow(P)
         h = torch.exp(nodes.mailbox['m'])
         alpha = torch.max(h)
