@@ -74,9 +74,11 @@ class GIN_MOD_Layer(nn.Module):
         #h = torch.abs(nodes.mailbox['m'])#.pow(P)
         h = torch.exp(nodes.mailbox['m'])
         alpha = torch.max(h)
-        h = (h/alpha).pow(p)
         print("max: ", torch.max(h))
         print("min: ", torch.min(h))
+        h = (h/alpha).pow(p)
+        print("max^p: ", torch.max(h))
+        print("min^p: ", torch.min(h))
         return {'neigh': (torch.sum(h, dim=1).pow(1/p))*alpha}
 
     def forward(self, g, h):
