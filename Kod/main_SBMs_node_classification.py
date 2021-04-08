@@ -304,6 +304,7 @@ def main():
     parser.add_argument('--max_time', help="Please give a value for max_time")
     parser.add_argument('--pos_enc_dim', help="Please give a value for pos_enc_dim")
     parser.add_argument('--pos_enc', help="Please give a value for pos_enc")
+    parser.add_argument('--neighbor_aggr', help="Please give a value for neighbor_aggr")
     args = parser.parse_args()
     with open(args.config) as f:
         config = json.load(f)
