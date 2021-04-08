@@ -43,7 +43,6 @@ class GatedTestLayer(nn.Module):
         self.bn_node_e = nn.BatchNorm1d(output_dim)
 
     def reduce_lame(self, nodes):
-        print("pick fukken aggrfunc")
         return {'sum_sigma_h': torch.sum(nodes.mailbox['m'])}
 
     def reduce_fp(self, nodes):
