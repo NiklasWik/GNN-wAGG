@@ -43,7 +43,7 @@ class GatedTestLayer(nn.Module):
         self.bn_node_e = nn.BatchNorm1d(output_dim)
 
     def reduce_lame(self, nodes):
-        return {'sum_sigma_h': torch.sum(nodes.mailbox['m'])}
+        return {'sum_sigma_h': torch.sum(nodes.mailbox['m'], dim=1)}
 
     def reduce_fp(self, nodes):
         w = torch.exp(self.w)
@@ -78,7 +78,7 @@ class GatedTestLayer(nn.Module):
         g.edata['e'] = g.edata['DEh'] + g.edata['Ce']
         g.edata['sigma'] = torch.sigmoid(g.edata['e']) 
         g.update_all(fn.copy_e('sigma', 'm'), fn.sum('m', 'sum_sigma')) 
-        g.ndata['eee'] = fn.u_div_v(g.ndata['Bh'],(g.ndata['sum_sigma'] + 1e-6))
+        g.ndata['eee'] = g.ndata['Bh'] / (g.ndata['sum_sigma'] + 1e-6)
         g.update_all(fn.u_mul_e('eee', 'sigma', 'm'), self._reducer) 
         g.ndata['h'] = g.ndata['Ah'] + g.ndata['sum_sigma_h'] 
 
