@@ -61,22 +61,11 @@ class GatedTestLayer(nn.Module):
         p = torch.clamp(self.P,1,100)
         h = torch.abs(nodes.mailbox['m'])
         #print(torch.max(h))
-        if torch.isnan(h).any():
-            print("rad 63")
+        
         #h = torch.exp(nodes.mailbox['m'])
         alpha = torch.max(h)
-        htemp = (h/alpha)
-        if torch.isnan(htemp).any():
-            print("rad 68")
         h = torch.abs((h/alpha)).pow(p)
-        if torch.isnan(h).any():
-            print("rad 71")
-            #print(htemp.detach().numpy()[torch.isnan(h).detach().numpy()])
-            #print(p.detach().numpy()[torch.isnan(h).detach().numpy()])
-        if torch.isnan(p).any():
-            print("p-nan")
-        if torch.isnan((torch.sum(h, dim=1).pow(1/p))*alpha).any():
-            print("sum")
+        
         return {'sum_sigma_h': (torch.sum(h, dim=1).pow(1/p))*alpha}
 
     def forward(self, g, h, e):
@@ -85,6 +74,8 @@ class GatedTestLayer(nn.Module):
         e_in = e # for residual connection
         
         g.ndata['h']  = h 
+        if torch.isnan(h).any():
+            print("börja va")
         g.ndata['Ah'] = self.A(h) 
         g.ndata['Bh'] = self.B(h) 
         g.ndata['Dh'] = self.D(h)
@@ -103,7 +94,7 @@ class GatedTestLayer(nn.Module):
         if torch.isnan(g.ndata['sum_sigma_h']).any():
             print("rad 93")
             raise KeyError('Aggregator type {} not recognized.'.format(aggr_type))
-            
+
         g.ndata['h'] = g.ndata['Ah'] + g.ndata['sum_sigma_h'] 
 
         #h, e = self.update_all_p_norm(g)
@@ -124,6 +115,8 @@ class GatedTestLayer(nn.Module):
         h = F.dropout(h, self.dropout, training=self.training)
         e = F.dropout(e, self.dropout, training=self.training)
         
+        if torch.isnan(h).any():
+            print("sluta")
         return h, e
     
     def __repr__(self):
