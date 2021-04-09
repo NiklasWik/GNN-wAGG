@@ -32,18 +32,24 @@ def train_epoch_sparse(model, optimizer, device, data_loader, epoch):
             batch_scores = model.forward(batch_graphs, batch_x, batch_e, batch_pos_enc)
         except:
             batch_scores = model.forward(batch_graphs, batch_x, batch_e)
+        
+        loss = model.loss(batch_scores, batch_labels)
         for idx,l in enumerate(model.layers):
+            print("------------after loss---------")
             print("iteration: ", iter)
             print("layer: ", idx, ", P: ", l.P)
             print("layer: ", idx, ", grad(P): ", l.P.grad)
             print("layer: ", idx, ", A: ", l.A.weight)
             print("layer: ", idx, ", grad A: ", l.A.weight.grad)
+            print("layer: ", idx, ", B: ", l.B.weight)
             print("layer: ", idx, ", grad B: ", l.B.weight.grad)
+            print("layer: ", idx, ", C: ", l.C.weight)
             print("layer: ", idx, ", .gradC: ", l.C.weight.grad)
+            print("layer: ", idx, ", D: ", l.D.weight)
             print("layer: ", idx, ", .gradD: ", l.D.weight.grad)
+            print("layer: ", idx, ", E: ", l.E.weight)
             print("layer: ", idx, ", .gradE: ", l.E.weight.grad)
-        
-        loss = model.loss(batch_scores, batch_labels)
+            print("------------loss end---------")
         loss.backward()
         for idx,l in enumerate(model.layers):
             print("------------after backward---------")

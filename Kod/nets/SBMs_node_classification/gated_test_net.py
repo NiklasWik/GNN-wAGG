@@ -47,6 +47,7 @@ class GatedTestNet(nn.Module):
         # input embedding
         print("net forward beginning h: ",h)
         h = self.embedding_h(h)
+        print("net embedding_h(h)= h: ",h)
         if self.pos_enc:
             h_pos_enc = self.embedding_pos_enc(h_pos_enc.float()) 
             h = h + h_pos_enc
@@ -58,8 +59,6 @@ class GatedTestNet(nn.Module):
 
         # output
         h_out = self.MLP_layer(h)
-        print("post conv h: ",h)
-        print("post conv h_out (MLP):", h_out)
         if torch.isnan(h).any():
             raise KeyError('fan')
         if torch.isnan(h_out).any():
