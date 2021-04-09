@@ -32,6 +32,18 @@ def train_epoch_sparse(model, optimizer, device, data_loader, epoch):
             batch_scores = model.forward(batch_graphs, batch_x, batch_e, batch_pos_enc)
         except:
             batch_scores = model.forward(batch_graphs, batch_x, batch_e)
+        for idx,l in enumerate(model.layers):
+            print("iteration: ", iter)
+            print("layer: ", idx, ", P: ", l.P)
+            print("layer: ", idx, ", grad(P): ", l.P.grad)
+            print("layer: ", idx, ", A: ", l.A.weight)
+            print("layer: ", idx, ", B: ", l.B.weight)
+            print("layer: ", idx, ", C: ", l.C.weight)
+            print("layer: ", idx, ", D: ", l.D.weight)
+            print("layer: ", idx, ", E: ", l.E.weight)
+            if torch.isnan(l.P).any():
+                raise KeyError('fan')
+        
         loss = model.loss(batch_scores, batch_labels)
         loss.backward()
         optimizer.step()
@@ -40,9 +52,9 @@ def train_epoch_sparse(model, optimizer, device, data_loader, epoch):
     epoch_loss /= (iter + 1)
     epoch_train_acc /= (iter + 1)
     
-    for idx,l in enumerate(model.layers):
+    """  for idx,l in enumerate(model.layers):
         print("layer: ", idx, ", grad(P): ", l.P.grad)
-        print("layer: ", idx, ", P: ", l.P)
+        print("layer: ", idx, ", P: ", l.P) """
 
     return epoch_loss, epoch_train_acc, optimizer
 
