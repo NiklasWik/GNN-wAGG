@@ -71,8 +71,8 @@ class GatedTestLayer(nn.Module):
         h = torch.abs((h/alpha)).pow(p)
         if torch.isnan(h).any():
             print("rad 71")
-            print(htemp.np()[torch.isnan(h).np()])
-            print(p.np()[torch.isnan(h).np()])
+            print(htemp.numpy()[torch.isnan(h).numpy()])
+            print(p.numpy()[torch.isnan(h).numpy()])
         if torch.isnan(p).any():
             print("p-nan")
 
