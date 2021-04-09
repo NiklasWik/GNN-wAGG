@@ -10,7 +10,7 @@
     "out_dir": "out/SBMs_node_classification/",
     
     "params": {
-        "seed": 95,
+        "seed": 12,
         "epochs": 1000,
         "batch_size": 128,
         "init_lr": 0.001,
