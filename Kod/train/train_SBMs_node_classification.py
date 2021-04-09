@@ -36,11 +36,11 @@ def train_epoch_sparse(model, optimizer, device, data_loader, epoch):
             print("iteration: ", iter)
             print("layer: ", idx, ", P: ", l.P)
             print("layer: ", idx, ", grad(P): ", l.P.grad)
-            print("layer: ", idx, ", A: ", l.A)
-            print("layer: ", idx, ", B: ", l.B)
-            print("layer: ", idx, ", C: ", l.C)
-            print("layer: ", idx, ", D: ", l.D)
-            print("layer: ", idx, ", E: ", l.E)
+            print("layer: ", idx, ", A: ", l.A.weight)
+            print("layer: ", idx, ", B: ", l.B.weight)
+            print("layer: ", idx, ", C: ", l.C.weight)
+            print("layer: ", idx, ", D: ", l.D.weight)
+            print("layer: ", idx, ", E: ", l.E.weight)
             if torch.isnan(l.P).any():
                 raise KeyError('fan')
         
