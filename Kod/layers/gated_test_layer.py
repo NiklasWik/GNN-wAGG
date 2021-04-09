@@ -74,8 +74,6 @@ class GatedTestLayer(nn.Module):
         e_in = e # for residual connection
         
         g.ndata['h']  = h 
-        if torch.isnan(h).any():
-            print("börja va")
         g.ndata['Ah'] = self.A(h) 
         g.ndata['Bh'] = self.B(h) 
         g.ndata['Dh'] = self.D(h)
@@ -91,9 +89,6 @@ class GatedTestLayer(nn.Module):
         g.ndata['eee'] = g.ndata['Bh'] / (g.ndata['sum_sigma'] + 1e-6)
         
         g.update_all(fn.u_mul_e('eee', 'sigma', 'm'), self._reducer) 
-        if torch.isnan(g.ndata['sum_sigma_h']).any():
-            print("rad 93")
-            raise KeyError('Aggregator type {} not recognized.'.format(aggr_type))
 
         g.ndata['h'] = g.ndata['Ah'] + g.ndata['sum_sigma_h'] 
 
@@ -114,9 +109,7 @@ class GatedTestLayer(nn.Module):
         
         h = F.dropout(h, self.dropout, training=self.training)
         e = F.dropout(e, self.dropout, training=self.training)
-        
-        if torch.isnan(h).any():
-            print("sluta")
+       
         return h, e
     
     def __repr__(self):
