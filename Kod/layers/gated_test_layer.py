@@ -28,7 +28,7 @@ class GatedTestLayer(nn.Module):
             self._reducer = self.reduce_fp
             self.w = nn.Parameter(torch.rand(output_dim)+1)
             self.b = nn.Parameter(torch.rand(1)+1)
-        elif aggr_type = "sum":
+        elif aggr_type == "sum":
             self._reducer = self.reduce_sum
         else:
             raise KeyError('Aggregator type {} not recognized.'.format(aggr_type))
