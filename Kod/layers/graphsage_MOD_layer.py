@@ -23,7 +23,7 @@ class GraphSageLayer(nn.Module):
         self.batch_norm = batch_norm
         self.residual = residual
         self.dgl_builtin = dgl_builtin
-        self.P = nn.Parameter(torch.rand(out_feats)*6+1) 
+        self.p = nn.Parameter(torch.rand(out_feats)*6+1) 
         
         if in_feats != out_feats:
             self.residual = False
