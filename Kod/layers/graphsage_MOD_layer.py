@@ -84,7 +84,7 @@ class GraphSageLayer(nn.Module):
                              self.nodeapply)
             elif self.aggregator_type == 'pnorm':
                 g.ndata['h'] = self.linear(g.ndata['h'])
-                g.update_all(fn.copy_src('h', 'm'), self.reduce_p, self.nodeapply)
+                g.update_all(fn.copy_src('h', 'm'), self.reduce_p)
             else:
                 g.update_all(fn.copy_src('h', 'm'), fn.mean('m', 'c'), self.nodeapply)
             h = g.ndata['h']
