@@ -23,7 +23,7 @@ class GatedTestLayer(nn.Module):
         
         if aggr_type == "pnorm":
             self._reducer = self.reduce_p
-            self.P = nn.Parameter(torch.rand(output_dim)*6+1)
+            self.P = nn.Parameter(torch.rand(output_dim)*1+1)
         elif aggr_type == "planar":
             self._reducer = self.reduce_fp
             self.w = nn.Parameter(torch.rand(output_dim)+1)
@@ -57,7 +57,7 @@ class GatedTestLayer(nn.Module):
         p = torch.clamp(self.P,1,100)
         h = torch.abs(nodes.mailbox['m'])
         print(torch.max(h))
-        print(torch.min(h))
+        
         #h = torch.exp(nodes.mailbox['m'])
         alpha = torch.max(h)
         h = (h/alpha).pow(p)
