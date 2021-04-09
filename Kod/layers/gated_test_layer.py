@@ -45,6 +45,7 @@ class GatedTestLayer(nn.Module):
         self.bn_node_e = nn.BatchNorm1d(output_dim)
 
     def reduce_sum(self, nodes):
+        print(torch.max(nodes.mailbox['m']))
         return {'sum_sigma_h': torch.sum(nodes.mailbox['m'], dim=1)}
 
     def reduce_fp(self, nodes):
