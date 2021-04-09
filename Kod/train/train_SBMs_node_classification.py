@@ -47,6 +47,23 @@ def train_epoch_sparse(model, optimizer, device, data_loader, epoch):
         
         loss = model.loss(batch_scores, batch_labels)
         loss.backward()
+        for idx,l in enumerate(model.layers):
+            print("------------after backward---------")
+            print("iteration: ", iter)
+            print("layer: ", idx, ", P: ", l.P)
+            print("layer: ", idx, ", grad(P): ", l.P.grad)
+            print("layer: ", idx, ", A: ", l.A.weight)
+            print("layer: ", idx, ", grad A: ", l.A.weight.grad)
+            print("layer: ", idx, ", B: ", l.B.weight)
+            print("layer: ", idx, ", grad B: ", l.B.weight.grad)
+            print("layer: ", idx, ", C: ", l.C.weight)
+            print("layer: ", idx, ", .gradC: ", l.C.weight.grad)
+            print("layer: ", idx, ", D: ", l.D.weight)
+            print("layer: ", idx, ", .gradD: ", l.D.weight.grad)
+            print("layer: ", idx, ", E: ", l.E.weight)
+            print("layer: ", idx, ", .gradE: ", l.E.weight.grad)
+            if torch.isnan(l.P).any():
+                raise KeyError('fan')
         optimizer.step()
         epoch_loss += loss.detach().item()
         epoch_train_acc += accuracy(batch_scores, batch_labels)
