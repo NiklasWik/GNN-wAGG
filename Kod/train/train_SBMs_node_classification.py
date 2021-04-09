@@ -33,10 +33,10 @@ def train_epoch_sparse(model, optimizer, device, data_loader, epoch):
         except:
             batch_scores = model.forward(batch_graphs, batch_x, batch_e)
         for idx,l in enumerate(model.layers):
+            print("iteration: ", iter)
+            print("layer: ", idx, ", P: ", l.P)
+            print("layer: ", idx, ", grad(P): ", l.P.grad)
             if torch.isnan(l.P).any():
-                print("iteration: ", iter)
-                print("layer: ", idx, ", P: ", l.P)
-                print("layer: ", idx, ", grad(P): ", l.P.grad)
                 raise KeyError('fan')
         
         loss = model.loss(batch_scores, batch_labels)
