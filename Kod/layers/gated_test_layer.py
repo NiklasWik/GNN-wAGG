@@ -64,9 +64,12 @@ class GatedTestLayer(nn.Module):
             print("rad 63")
         #h = torch.exp(nodes.mailbox['m'])
         alpha = torch.max(h)
+        htemp = (h/alpha)
+        if torch.isnan(htemp).any():
+            print("rad 68")
         h = torch.abs((h/alpha)).pow(p)
         if torch.isnan(h).any():
-            print("rad 68")
+            print("rad 71")
         return {'sum_sigma_h': (torch.sum(h, dim=1).pow(1/p))*alpha}
 
     def forward(self, g, h, e):
