@@ -42,6 +42,7 @@ class GraphSageLayer(nn.Module):
                 self.aggregator = SumPoolAggregator()
             elif aggregator_type == "pnorm":
                 self.linear = nn.Linear(in_feats, out_feats, bias=bias)
+                print("pnorm")
             else:
                 self.aggregator = MeanAggregator()
         else:

@@ -17,6 +17,10 @@ from nets.SBMs_node_classification.gin_MOD_net import GIN_mod_Net
 from nets.SBMs_node_classification.gin_MOD_linear_net import GIN_mod_linear_Net
 from nets.SBMs_node_classification.gin_MOD_linear_net import GIN_mod_linear_Net
 from nets.SBMs_node_classification.gated_test_net import GatedTestNet
+from nets.SBMs_node_classification.gated_test_net import GraphSage_MOD_Net
+
+def Grahpsagemod(net_params):
+    return GraphSage_MOD_Net(net_params)
 
 def GatedTest(net_params):
     return GatedTestNet(net_params)
@@ -72,7 +76,8 @@ def gnn_model(MODEL_NAME, net_params):
         'MyGNN': MyGNN,
         'GINmod': GINmod,
         'GINlinearmod': GINlinearmod,
-        'GatedTest': GatedTest
+        'GatedTest': GatedTest,
+        'GraphSageMOD': Grahpsagemod
     }
         
     return models[MODEL_NAME](net_params)

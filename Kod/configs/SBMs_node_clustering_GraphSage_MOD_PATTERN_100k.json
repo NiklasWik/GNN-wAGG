@@ -4,7 +4,7 @@
         "id": 0
     },
     
-    "model": "GraphSage",
+    "model": "GraphSageMOD",
     "dataset": "SBM_PATTERN",
     
     "out_dir": "out/SBMs_node_classification/",
