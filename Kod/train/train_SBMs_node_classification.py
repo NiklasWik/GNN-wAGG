@@ -37,8 +37,8 @@ def train_epoch_sparse(model, optimizer, device, data_loader, epoch):
         """ for idx,l in enumerate(model.layers):
             print("------------after loss---------")
             print("iteration: ", iter)
-            """ print("layer: ", idx, ", P: ", l.P)
-            print("layer: ", idx, ", grad(P): ", l.P.grad) """
+            print("layer: ", idx, ", P: ", l.P)
+            print("layer: ", idx, ", grad(P): ", l.P.gra
             print("layer: ", idx, ", A: ", l.A.weight)
             print("layer: ", idx, ", grad A: ", l.A.weight.grad)
             print("layer: ", idx, ", B: ", l.B.weight)
@@ -54,8 +54,8 @@ def train_epoch_sparse(model, optimizer, device, data_loader, epoch):
         """ for idx,l in enumerate(model.layers):
             print("------------after backward---------")
             print("iteration: ", iter)
-            """ print("layer: ", idx, ", P: ", l.P)
-            print("layer: ", idx, ", grad(P): ", l.P.grad) """
+            print("layer: ", idx, ", P: ", l.P)
+            print("layer: ", idx, ", grad(P): ", l.P.grad)
             print("layer: ", idx, ", A: ", l.A.weight)
             print("layer: ", idx, ", grad A: ", l.A.weight.grad)
             print("layer: ", idx, ", B: ", l.B.weight)
