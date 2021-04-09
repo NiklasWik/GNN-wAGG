@@ -33,7 +33,7 @@ def train_epoch_sparse(model, optimizer, device, data_loader, epoch):
         except:
             batch_scores = model.forward(batch_graphs, batch_x, batch_e)
         for idx,l in enumerate(model.layers):
-            if torch.isnan(model.layers.P):
+            if torch.isnan(model.layers.P.any()):
                 print("iteration: ", iter)
                 print("layer: ", idx, ", P: ", l.P)
                 print("layer: ", idx, ", grad(P): ", l.P.grad)
@@ -45,7 +45,7 @@ def train_epoch_sparse(model, optimizer, device, data_loader, epoch):
     epoch_loss /= (iter + 1)
     epoch_train_acc /= (iter + 1)
     
-   """  for idx,l in enumerate(model.layers):
+    """  for idx,l in enumerate(model.layers):
         print("layer: ", idx, ", grad(P): ", l.P.grad)
         print("layer: ", idx, ", P: ", l.P) """
 
