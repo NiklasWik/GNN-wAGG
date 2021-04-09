@@ -59,11 +59,14 @@ class GatedTestLayer(nn.Module):
     def reduce_p(self,nodes):
         p = torch.clamp(self.P,1,100)
         h = torch.abs(nodes.mailbox['m'])
-        print(torch.max(h))
-        
+        #print(torch.max(h))
+        if torch.isnan(h).any():
+            print("rad 63")
         #h = torch.exp(nodes.mailbox['m'])
         alpha = torch.max(h)
-        h = (h/alpha).pow(p)
+        h = torch.abs((h/alpha)).pow(p)
+        if torch.isnan(h).any():
+            print("rad 68")
         return {'sum_sigma_h': (torch.sum(h, dim=1).pow(1/p))*alpha}
 
     def forward(self, g, h, e):
@@ -85,9 +88,10 @@ class GatedTestLayer(nn.Module):
         g.update_all(fn.copy_e('sigma', 'm'), fn.sum('m', 'sum_sigma')) 
 
         g.ndata['eee'] = g.ndata['Bh'] / (g.ndata['sum_sigma'] + 1e-6)
-
+        
         g.update_all(fn.u_mul_e('eee', 'sigma', 'm'), self._reducer) 
-
+        if torch.isnan(g.ndata['sum_sigma_h']).any():
+            print("rad 93")
         g.ndata['h'] = g.ndata['Ah'] + g.ndata['sum_sigma_h'] 
 
         #h, e = self.update_all_p_norm(g)
