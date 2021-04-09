@@ -34,7 +34,7 @@ def train_epoch_sparse(model, optimizer, device, data_loader, epoch):
             batch_scores = model.forward(batch_graphs, batch_x, batch_e)
         
         loss = model.loss(batch_scores, batch_labels)
-        for idx,l in enumerate(model.layers):
+        """ for idx,l in enumerate(model.layers):
             print("------------after loss---------")
             print("iteration: ", iter)
             """ print("layer: ", idx, ", P: ", l.P)
@@ -49,9 +49,9 @@ def train_epoch_sparse(model, optimizer, device, data_loader, epoch):
             print("layer: ", idx, ", .gradD: ", l.D.weight.grad)
             print("layer: ", idx, ", E: ", l.E.weight)
             print("layer: ", idx, ", .gradE: ", l.E.weight.grad)
-            print("------------loss end---------")
+            print("------------loss end---------") """
         loss.backward()
-        for idx,l in enumerate(model.layers):
+        """ for idx,l in enumerate(model.layers):
             print("------------after backward---------")
             print("iteration: ", iter)
             """ print("layer: ", idx, ", P: ", l.P)
@@ -65,7 +65,7 @@ def train_epoch_sparse(model, optimizer, device, data_loader, epoch):
             print("layer: ", idx, ", D: ", l.D.weight)
             print("layer: ", idx, ", .gradD: ", l.D.weight.grad)
             print("layer: ", idx, ", E: ", l.E.weight)
-            print("layer: ", idx, ", .gradE: ", l.E.weight.grad)
+            print("layer: ", idx, ", .gradE: ", l.E.weight.grad) """
         optimizer.step()
         epoch_loss += loss.detach().item()
         epoch_train_acc += accuracy(batch_scores, batch_labels)
