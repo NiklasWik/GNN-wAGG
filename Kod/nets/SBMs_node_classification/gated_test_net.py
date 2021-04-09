@@ -45,6 +45,7 @@ class GatedTestNet(nn.Module):
     def forward(self, g, h, e, h_pos_enc=None):
 
         # input embedding
+        print("net forward beginning h: ",h)
         h = self.embedding_h(h)
         if self.pos_enc:
             h_pos_enc = self.embedding_pos_enc(h_pos_enc.float()) 
