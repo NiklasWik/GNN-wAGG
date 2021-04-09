@@ -102,6 +102,7 @@ class GatedTestLayer(nn.Module):
         g.update_all(fn.u_mul_e('eee', 'sigma', 'm'), self._reducer) 
         if torch.isnan(g.ndata['sum_sigma_h']).any():
             print("rad 93")
+             raise KeyError('Aggregator type {} not recognized.'.format(aggr_type))
         g.ndata['h'] = g.ndata['Ah'] + g.ndata['sum_sigma_h'] 
 
         #h, e = self.update_all_p_norm(g)
