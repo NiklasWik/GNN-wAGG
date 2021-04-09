@@ -75,7 +75,8 @@ class GatedTestLayer(nn.Module):
             #print(p.detach().numpy()[torch.isnan(h).detach().numpy()])
         if torch.isnan(p).any():
             print("p-nan")
-
+        if torch.isnan((torch.sum(h, dim=1).pow(1/p))*alpha)).any():
+            print("sum")
         return {'sum_sigma_h': (torch.sum(h, dim=1).pow(1/p))*alpha}
 
     def forward(self, g, h, e):
