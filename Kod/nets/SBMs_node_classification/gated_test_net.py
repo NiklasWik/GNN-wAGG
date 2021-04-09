@@ -57,7 +57,12 @@ class GatedTestNet(nn.Module):
 
         # output
         h_out = self.MLP_layer(h)
-
+        print(h)
+        print(h_out)
+        if torch.isnan(h).any():
+            raise KeyError('fan')
+        if torch.isnan(h_out).any():
+            raise KeyError('fan')
         #print(self.layers[1].grad)
         return h_out
         
