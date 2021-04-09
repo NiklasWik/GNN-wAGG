@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import dgl.function as fn
+import numpy as np
 
 """
     ResGatedGCN: Residual Gated Graph ConvNets
@@ -70,8 +71,8 @@ class GatedTestLayer(nn.Module):
         h = torch.abs((h/alpha)).pow(p)
         if torch.isnan(h).any():
             print("rad 71")
-            print(htemp[torch.isnan(h)])
-            print(p[torch.isnan(h)])
+            print(htemp.np()[torch.isnan(h).np()])
+            print(p.np()[torch.isnan(h).np()])
         if torch.isnan(p).any():
             print("p-nan")
 
