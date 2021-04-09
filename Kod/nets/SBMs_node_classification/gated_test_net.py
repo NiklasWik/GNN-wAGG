@@ -50,15 +50,15 @@ class GatedTestNet(nn.Module):
             h_pos_enc = self.embedding_pos_enc(h_pos_enc.float()) 
             h = h + h_pos_enc
         e = self.embedding_e(e)
-        
+        print("pre conv h: ",h)
         # res gated convnets
         for conv in self.layers:
             h, e = conv(g, h, e)
 
         # output
         h_out = self.MLP_layer(h)
-        print(h)
-        print(h_out)
+        print("post conv h: ",h)
+        print("post conv h_out (MLP):", h_out)
         if torch.isnan(h).any():
             raise KeyError('fan')
         if torch.isnan(h_out).any():
