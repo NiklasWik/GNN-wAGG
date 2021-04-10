@@ -45,24 +45,21 @@ class GatedTestNet(nn.Module):
     def forward(self, g, h, e, h_pos_enc=None):
 
         # input embedding
-        print("net forward beginning h: ",h)
         h = self.embedding_h(h)
-        print("net embedding_h(h)= h: ",h)
         if self.pos_enc:
             h_pos_enc = self.embedding_pos_enc(h_pos_enc.float()) 
             h = h + h_pos_enc
         e = self.embedding_e(e)
-        print("pre conv h: ",h)
         # res gated convnets
         for conv in self.layers:
             h, e = conv(g, h, e)
 
         # output
         h_out = self.MLP_layer(h)
-        if torch.isnan(h).any():
+        """ if torch.isnan(h).any():
             raise KeyError('fan')
         if torch.isnan(h_out).any():
-            raise KeyError('fan')
+            raise KeyError('fan') """
         #print(self.layers[1].grad)
         return h_out
         
