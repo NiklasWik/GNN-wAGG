@@ -28,16 +28,13 @@ def send_mail(send_to, subject, message, files=[], password=''):
     msg.attach(MIMEText(message))
 
     for path in files:
-        try:
-            part = MIMEBase('application', "octet-stream")
-            with open(path, 'rb') as file:
-                part.set_payload(file.read())
-            encoders.encode_base64(part)
-            part.add_header('Content-Disposition',
-                            'attachment; filename="{}"'.format(Path(path).name))
-            msg.attach(part)
-        except OSError:
-            print('filename="{}" not found'.format(Path(path).name))
+        part = MIMEBase('application', "octet-stream")
+        with open(path, 'rb') as file:
+            part.set_payload(file.read())
+        encoders.encode_base64(part)
+        part.add_header('Content-Disposition',
+                        'attachment; filename="{}"'.format(Path(path).name))
+        msg.attach(part)
 
     smtp = smtplib.SMTP(server, port)
     smtp.starttls()
