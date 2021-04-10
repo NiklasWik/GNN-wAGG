@@ -23,7 +23,6 @@ class GraphSageLayer(nn.Module):
         self.batch_norm = batch_norm
         self.residual = residual
         self.dgl_builtin = dgl_builtin
-        self.p = nn.Parameter(torch.rand(out_feats)*6+1) 
         
         if in_feats != out_feats:
             self.residual = False
@@ -38,11 +37,10 @@ class GraphSageLayer(nn.Module):
                                                     activation, bias)
             elif aggregator_type == "lstm":
                 self.aggregator = LSTMAggregator(in_feats, in_feats)
-            elif aggregator_type == "sumpool":
-                self.aggregator = SumPoolAggregator()
             elif aggregator_type == "pnorm":
-                self.linear = nn.Linear(in_feats, out_feats, bias=bias)
                 print("pnorm")
+                self.aggregator = PnormAggregator(in_feats, in_feats,
+                                                    activation, bias)
             else:
                 self.aggregator = MeanAggregator()
         else:
@@ -53,13 +51,11 @@ class GraphSageLayer(nn.Module):
             self.batchnorm_h = nn.BatchNorm1d(out_feats)
 
     def reduce_p(self, nodes):
-        p = torch.clamp(self.p,1,100)
+        p = torch.clamp(self.aggregator.power,1,100)
         h = torch.abs(nodes.mailbox['m'])
-        #h = nodes.mailbox['m'] - torch.min(h) + 1e-6
-        #h = torch.exp(nodes.mailbox['m'])
         
         h = h.pow(p)
-        return {'neigh': (torch.sum(h, dim=1).pow(1/p))}
+        return {'c': (torch.sum(h, dim=1).pow(1/p))}
 
         """ alpha = torch.max(h)
         h = (h/alpha).pow(p)
@@ -77,14 +73,15 @@ class GraphSageLayer(nn.Module):
             if self.aggregator_type == 'maxpool':
                 g.ndata['h'] = self.aggregator.linear(g.ndata['h'])
                 g.ndata['h'] = self.aggregator.activation(g.ndata['h'])
-                g.update_all(fn.copy_src('h', 'm'), fn.max('m', 'c'), self.nodeapply)
+                g.update_all(fn.copy_src('h', 'm'), self.reduce_p, self.nodeapply)
             elif self.aggregator_type == 'lstm':
                 g.update_all(fn.copy_src(src='h', out='m'), 
                              self.aggregator,
                              self.nodeapply)
             elif self.aggregator_type == 'pnorm':
-                g.ndata['h'] = self.linear(g.ndata['h'])
-                g.update_all(fn.copy_src('h', 'm'), self.reduce_p)
+                g.ndata['h'] = self.aggregator.linear(g.ndata['h'])
+                g.ndata['h'] = self.aggregator.activation(g.ndata['h'])
+                g.update_all(fn.copy_src('h', 'm'), fn.max('m', 'c'), self.nodeapply)
             else:
                 g.update_all(fn.copy_src('h', 'm'), fn.mean('m', 'c'), self.nodeapply)
             h = g.ndata['h']
@@ -139,19 +136,24 @@ class MeanAggregator(Aggregator):
         mean_neighbour = torch.mean(neighbour, dim=1)
         return mean_neighbour
 
-class SumPoolAggregator(Aggregator):
+class PnormAggregator(Aggregator):
     """
-    Mean Aggregator for graphsage
+    Maxpooling aggregator for graphsage
     """
 
-    def __init__(self):
+    def __init__(self, in_feats, out_feats, activation, bias):
         super().__init__()
+        self.linear = nn.Linear(in_feats, out_feats, bias=bias)
+        self.power = nn.Parameter(torch.rand(out_feats)*6+1) 
+        self.activation = activation
 
     def aggre(self, neighbour):
-        # test
-        sum_neighbour = torch.sum(neighbour, dim=1)
-        sum_neighbour = sum_neighbour.pow(torch.div(1,self.P))
-        return sum_neighbour
+        neighbour = self.linear(neighbour)
+        if self.activation:
+            neighbour = self.activation(neighbour)
+        neighbour = neighbour.pow(self.power)
+        pnorm_neighbour = torch.sum(neighbour, dim=1).pow(1/self.power)
+        return pnorm_neighbour
 
 
 class MaxPoolAggregator(Aggregator):
