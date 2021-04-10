@@ -64,7 +64,7 @@ class GatedTestLayer(nn.Module):
         
         #h = torch.exp(nodes.mailbox['m'])
         alpha = torch.max(h)
-        h = torch.pow((h/alpha) + 1e-6, p)
+        h = torch.pow(torch.div(h + 1e-6 ,alpha),p)
         
         return {'sum_sigma_h': torch.pow(torch.sum(h, dim=1) + 1e-6 ,torch.div(1,p))*alpha}
 
