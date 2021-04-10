@@ -64,9 +64,10 @@ class GatedTestLayer(nn.Module):
         
         #h = torch.exp(nodes.mailbox['m'])
         alpha = torch.max(h)
-        h = torch.pow((torch.abs(h) + 1e-6)/alpha, p)
+        eps = 1e-3
+        h = torch.pow((torch.abs(h) + eps)/alpha, p)
         
-        return {'sum_sigma_h': torch.pow(torch.abs(torch.sum(h, dim=1)) + 1e-6 , 1/p) * alpha}
+        return {'sum_sigma_h': torch.pow(torch.abs(torch.sum(h, dim=1)) + eps , 1/p) * alpha}
 
     def forward(self, g, h, e):
         
