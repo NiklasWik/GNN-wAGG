@@ -73,7 +73,7 @@ class GraphSageLayer(nn.Module):
             if self.aggregator_type == 'maxpool':
                 g.ndata['h'] = self.aggregator.linear(g.ndata['h'])
                 g.ndata['h'] = self.aggregator.activation(g.ndata['h'])
-                g.update_all(fn.copy_src('h', 'm'), self.reduce_p, self.nodeapply)
+                g.update_all(fn.copy_src('h', 'm'), fn.max('m', 'c'), self.nodeapply)
             elif self.aggregator_type == 'lstm':
                 g.update_all(fn.copy_src(src='h', out='m'), 
                              self.aggregator,
@@ -81,7 +81,8 @@ class GraphSageLayer(nn.Module):
             elif self.aggregator_type == 'pnorm':
                 g.ndata['h'] = self.aggregator.linear(g.ndata['h'])
                 g.ndata['h'] = self.aggregator.activation(g.ndata['h'])
-                g.update_all(fn.copy_src('h', 'm'), fn.max('m', 'c'), self.nodeapply)
+                g.update_all(fn.copy_src('h', 'm'), self.reduce_p, self.nodeapply)
+                
             else:
                 g.update_all(fn.copy_src('h', 'm'), fn.mean('m', 'c'), self.nodeapply)
             h = g.ndata['h']
