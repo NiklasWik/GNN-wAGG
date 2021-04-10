@@ -36,7 +36,7 @@ def send_mail(send_to, subject, message, files=[], password=''):
             part.add_header('Content-Disposition',
                             'attachment; filename="{}"'.format(Path(path).name))
             msg.attach(part)
-        except:
+        finally: 
             print('filename="{}" not found'.format(Path(path).name))
 
     smtp = smtplib.SMTP(server, port)
