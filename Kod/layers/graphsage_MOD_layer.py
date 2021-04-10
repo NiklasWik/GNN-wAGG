@@ -56,7 +56,7 @@ class GraphSageLayer(nn.Module):
         alpha = torch.max(h)
         h = (h/alpha).pow(p)
         print(torch.max(h))
-        return {'c': (torch.sum(h, dim=1).pow(torch.div(1/p)))*alpha}
+        return {'c': (torch.sum(h, dim=1).pow(torch.div(1,p)))*alpha}
 
         """ alpha = torch.max(h)
         h = (h/alpha).pow(p)
