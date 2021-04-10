@@ -34,11 +34,11 @@ def train_epoch_sparse(model, optimizer, device, data_loader, epoch):
             batch_scores = model.forward(batch_graphs, batch_x, batch_e)
         
         loss = model.loss(batch_scores, batch_labels)
-        """ for idx,l in enumerate(model.layers):
+        for idx,l in enumerate(model.layers):
             print("------------after loss---------")
             print("iteration: ", iter)
             print("layer: ", idx, ", P: ", l.P)
-            print("layer: ", idx, ", grad(P): ", l.P.gra
+            """ print("layer: ", idx, ", grad(P): ", l.P.gra
             print("layer: ", idx, ", A: ", l.A.weight)
             print("layer: ", idx, ", grad A: ", l.A.weight.grad)
             print("layer: ", idx, ", B: ", l.B.weight)
