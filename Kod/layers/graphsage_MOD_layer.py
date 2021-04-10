@@ -56,7 +56,7 @@ class GraphSageLayer(nn.Module):
         alpha = torch.max(h)
         print(alpha)
         h = torch.pow(torch.div(h,alpha),p)
-        return {'c': torch.pow(torch.sum(h, dim=1),torch.div(1,p))*alpha}
+        return {'c': torch.pow(torch.mean(h, dim=1),torch.div(1,p))*alpha}
 
         """ alpha = torch.max(h)
         h = (h/alpha).pow(p)
@@ -146,7 +146,7 @@ class PnormAggregator(Aggregator):
     def __init__(self, in_feats, out_feats, activation, bias):
         super().__init__()
         self.linear = nn.Linear(in_feats, out_feats, bias=bias)
-        self.power = nn.Parameter(torch.rand(out_feats)*6+1) 
+        self.power = nn.Parameter(torch.rand(in_feats)*6+1) 
         self.activation = activation
 
     def aggre(self, neighbour):
