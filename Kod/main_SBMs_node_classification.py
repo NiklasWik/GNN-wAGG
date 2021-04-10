@@ -105,6 +105,8 @@ def train_val_pipeline(MODEL_NAME, dataset, params, net_params, dirs):
             dataset._add_self_loops()
     
     if MODEL_NAME in ['GatedGCN', 'GatedTest']:
+        print('Seed: ', params['seed'])
+        print('Aggregation function: ', net_params['neighbor_aggr'])
         if net_params['pos_enc']:
             print("[!] Adding graph positional encoding.")
             dataset._add_positional_encodings(net_params['pos_enc_dim'])
