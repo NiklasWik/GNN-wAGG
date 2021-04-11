@@ -9,10 +9,10 @@ import dgl
     Graph Attention Networks (Veličković et al., ICLR 2018)
     https://arxiv.org/abs/1710.10903
 """
-from layers.gat_layer import GATLayer
+from layers.gat_MOD_layer import CustomGATLayer
 from layers.mlp_readout_layer import MLPReadout
 
-class GATNet(nn.Module):
+class GAT_mod_Net(nn.Module):
 
     def __init__(self, net_params):
         super().__init__()
@@ -25,6 +25,7 @@ class GATNet(nn.Module):
         in_feat_dropout = net_params['in_feat_dropout']
         dropout = net_params['dropout']
         n_layers = net_params['L']
+        neighbor_aggr_type = net_params['neighbor_aggr'] 
 
         self.readout = net_params['readout']
         self.batch_norm = net_params['batch_norm']
@@ -37,9 +38,9 @@ class GATNet(nn.Module):
         
         self.in_feat_dropout = nn.Dropout(in_feat_dropout)
         
-        self.layers = nn.ModuleList([CustomGATLayer(hidden_dim * num_heads, hidden_dim, num_heads,
+        self.layers = nn.ModuleList([CustomGATLayer(neighbor_aggr_type, hidden_dim * num_heads, hidden_dim, num_heads,
                                               dropout, self.batch_norm, self.residual) for _ in range(n_layers-1)])
-        self.layers.append(CustomGATLayer(hidden_dim * num_heads, out_dim, 1, dropout, self.batch_norm, self.residual))
+        self.layers.append(CustomGATLayer(neighbor_aggr_type, hidden_dim * num_heads, out_dim, 1, dropout, self.batch_norm, self.residual))
         self.MLP_layer = MLPReadout(out_dim, n_classes)
 
 
