@@ -110,7 +110,6 @@ class CustomGATHeadLayer(nn.Module):
         return {'h': h}
 
     def forward(self, g, h, e):
-        print(h)
         z = self.fc(h)
         g.ndata['z'] = z
         g.apply_edges(self.edge_attention)
