@@ -55,7 +55,7 @@ class GraphSageLayer(nn.Module):
         h = torch.abs(nodes.mailbox['m'])
         alpha = torch.max(h)
         #print(alpha)
-        eps = 0
+        eps = 1e-6
         h = torch.pow(torch.div(h,alpha) + eps ,p)
         return {'c': torch.pow(torch.sum(h, dim=1) + eps ,torch.div(1,p))*alpha}
 
