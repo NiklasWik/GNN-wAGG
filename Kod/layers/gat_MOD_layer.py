@@ -71,7 +71,7 @@ class GATLayer(nn.Module):
 
 
 class CustomGATHeadLayer(nn.Module):
-    def __init__(self, in_dim, out_dim, dropout, batch_norm):
+    def __init__(self, neighbor_aggr, in_dim, out_dim, dropout, batch_norm):
         super().__init__()
         self.dropout = dropout
         self.batch_norm = batch_norm
@@ -79,6 +79,14 @@ class CustomGATHeadLayer(nn.Module):
         self.fc = nn.Linear(in_dim, out_dim, bias=False)
         self.attn_fc = nn.Linear(2 * out_dim, 1, bias=False)
         self.batchnorm_h = nn.BatchNorm1d(out_dim)
+        if neighbor_aggr == "pnorm":
+            self._reduce = self.reduce_p
+            print("pnorm")
+        elif neighbor_aggr == "planar":
+            print("Not implemented")
+        else:
+            self._reduce = self.reduce_func
+
 
     def edge_attention(self, edges):
         z2 = torch.cat([edges.src['z'], edges.dst['z']], dim=1)
@@ -92,6 +100,13 @@ class CustomGATHeadLayer(nn.Module):
         alpha = F.softmax(nodes.mailbox['e'], dim=1)
         alpha = F.dropout(alpha, self.dropout, training=self.training)
         h = torch.sum(alpha * nodes.mailbox['z'], dim=1)
+        return {'h': h}
+
+    def reduce_p(self, nodes):
+        p = torch.clamp(self.p,1,100)
+        alpha = F.softmax(nodes.mailbox['e'], dim=1)
+        alpha = F.dropout(alpha, self.dropout, training=self.training)
+        h = torch.sum((alpha * nodes.mailbox['z']).pow(p), dim=1).pow(1/p)
         return {'h': h}
 
     def forward(self, g, h):
@@ -115,7 +130,7 @@ class CustomGATLayer(nn.Module):
     """
         Param: [in_dim, out_dim, n_heads]
     """
-    def __init__(self, in_dim, out_dim, num_heads, dropout, batch_norm, residual=True):
+    def __init__(self, neighbor_aggr, in_dim, out_dim, num_heads, dropout, batch_norm, residual=True):
         super().__init__()
 
         self.in_channels = in_dim
@@ -128,7 +143,7 @@ class CustomGATLayer(nn.Module):
 
         self.heads = nn.ModuleList()
         for i in range(num_heads):
-            self.heads.append(CustomGATHeadLayer(in_dim, out_dim, dropout, batch_norm))
+            self.heads.append(CustomGATHeadLayer(neighbor_aggr, in_dim, out_dim, dropout, batch_norm))
         self.merge = 'cat' 
 
     def forward(self, g, h, e):
