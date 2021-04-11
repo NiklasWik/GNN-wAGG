@@ -251,9 +251,9 @@ def train_val_pipeline(MODEL_NAME, dataset, params, net_params, dirs):
     with open(write_file_name + '.txt', 'w') as f:
         f.write("""Dataset: {},\nModel: {}\n\nparams={}\n\nnet_params={}\n\n{}\n\nTotal Parameters: {}\n\n
     FINAL RESULTS\nTEST ACCURACY: {:.4f}\nTRAIN ACCURACY: {:.4f}\n\n
-    Convergence Time (Epochs): {:.4f}\nTotal Time Taken: {:.4f} hrs\nAverage Time Per Epoch: {:.4f} s\n\n\n"""\
+    Convergence Time (Epochs): {:.4f}\nTotal Time Taken: {:.4f} hrs\nAverage Time Per Epoch: {:.4f} s\n GPU: {}\n\n\n"""\
           .format(DATASET_NAME, MODEL_NAME, params, net_params, model, net_params['total_param'],
-                  test_acc, train_acc, epoch, (time.time()-start0)/3600, np.mean(per_epoch_time)))
+                  test_acc, train_acc, epoch, (time.time()-start0)/3600, np.mean(per_epoch_time), torch.cuda.get_device_name(0)))
 
         
 
