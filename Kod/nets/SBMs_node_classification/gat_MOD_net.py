@@ -52,7 +52,7 @@ class GAT_mod_Net(nn.Module):
 
         # GAT
         for conv in self.layers:
-            h = conv(g, h)
+            h = conv(g, h, e)
             
         # output
         h_out = self.MLP_layer(h)
