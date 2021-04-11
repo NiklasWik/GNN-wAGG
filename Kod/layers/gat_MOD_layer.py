@@ -81,7 +81,7 @@ class CustomGATHeadLayer(nn.Module):
         self.batchnorm_h = nn.BatchNorm1d(out_dim)
         if neighbor_aggr == "pnorm":
             self._reduce = self.reduce_p
-            self.p = nn.Parameter(torch.rand(in_feats)*6+1) 
+            self.p = nn.Parameter(torch.rand(out_dim)*6+1) 
             print("pnorm")
         elif neighbor_aggr == "planar":
             print("Not implemented")
