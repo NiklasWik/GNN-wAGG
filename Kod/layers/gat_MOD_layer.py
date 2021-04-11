@@ -109,7 +109,7 @@ class CustomGATHeadLayer(nn.Module):
         h = torch.sum((alpha * nodes.mailbox['z']).pow(p), dim=1).pow(1/p)
         return {'h': h}
 
-    def forward(self, g, h):
+    def forward(self, g, h, e):
         z = self.fc(h)
         g.ndata['z'] = z
         g.apply_edges(self.edge_attention)
@@ -149,7 +149,7 @@ class CustomGATLayer(nn.Module):
     def forward(self, g, h, e):
         h_in = h # for residual connection
         
-        head_outs = [attn_head(g, h) for attn_head in self.heads]
+        head_outs = [attn_head(g, h, e) for attn_head in self.heads]
 
         if self.merge == 'cat':
             h = torch.cat(head_outs, dim=1)
