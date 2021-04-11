@@ -147,7 +147,7 @@ class PnormAggregator(Aggregator):
     def __init__(self, in_feats, out_feats, activation, bias):
         super().__init__()
         self.linear = nn.Linear(in_feats, out_feats, bias=bias)
-        self.power = nn.Parameter(torch.rand(in_feats)*3+1) 
+        self.power = nn.Parameter(torch.rand(in_feats)*6+1) 
         self.activation = activation
 
     def aggre(self, neighbour):
