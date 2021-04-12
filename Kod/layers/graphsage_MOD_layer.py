@@ -39,8 +39,11 @@ class GraphSageLayer(nn.Module):
                 self.aggregator = LSTMAggregator(in_feats, in_feats)
             elif aggregator_type == "pnorm":
                 print("pnorm")
-                self.aggregator = PnormAggregator(in_feats, in_feats,
-                                                    activation, bias)
+                #self.aggregator = PnormAggregator(in_feats, in_feats,
+                                                    #activation, bias)
+                self.linear = nn.Linear(in_feats, out_feats, bias=bias)
+                self.power = nn.Parameter(torch.rand(in_feats)*6+1) 
+                self.activation = activation
             else:
                 self.aggregator = MeanAggregator()
         else:
@@ -51,10 +54,10 @@ class GraphSageLayer(nn.Module):
             self.batchnorm_h = nn.BatchNorm1d(out_feats)
 
     def reduce_p(self, nodes):
-        p = torch.clamp(self.aggregator.power,1,100)
+        #p = torch.clamp(self.aggregator.power,1,100)
+        p = torch.clamp(self.power,1,100)
         h = torch.abs(nodes.mailbox['m'])
         alpha = torch.max(h)
-        #print(alpha)
         eps = 1e-6
         h = torch.pow(torch.div(h,alpha) + eps ,p)
         return {'c': torch.pow(torch.sum(h, dim=1) + eps ,torch.div(1,p))*alpha}
@@ -81,8 +84,10 @@ class GraphSageLayer(nn.Module):
                              self.aggregator,
                              self.nodeapply)
             elif self.aggregator_type == 'pnorm':
-                g.ndata['h'] = self.aggregator.linear(g.ndata['h'])
-                g.ndata['h'] = self.aggregator.activation(g.ndata['h'])
+                """ g.ndata['h'] = self.aggregator.linear(g.ndata['h'])
+                g.ndata['h'] = self.aggregator.activation(g.ndata['h']) """
+                g.ndata['h'] = self.linear(g.ndata['h'])
+                g.ndata['h'] = self.activation(g.ndata['h'])
                 g.update_all(fn.copy_src('h', 'm'), self.reduce_p, self.nodeapply)
                 
             else:
@@ -147,16 +152,16 @@ class PnormAggregator(Aggregator):
     def __init__(self, in_feats, out_feats, activation, bias):
         super().__init__()
         self.linear = nn.Linear(in_feats, out_feats, bias=bias)
-        self.power = nn.Parameter(torch.rand(in_feats)*3+1) 
+        self.power = nn.Parameter(torch.rand(in_feats)*6+1) 
         self.activation = activation
 
-    def aggre(self, neighbour):
+    """ def aggre(self, neighbour):
         neighbour = self.linear(neighbour)
         if self.activation:
             neighbour = self.activation(neighbour)
         neighbour = neighbour.pow(self.power)
         pnorm_neighbour = torch.sum(neighbour, dim=1).pow(1/self.power)
-        return pnorm_neighbour
+        return pnorm_neighbour """
 
 
 class MaxPoolAggregator(Aggregator):

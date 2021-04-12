@@ -81,6 +81,7 @@ class CustomGATHeadLayer(nn.Module):
         self.batchnorm_h = nn.BatchNorm1d(out_dim)
         if neighbor_aggr == "pnorm":
             self._reduce = self.reduce_p
+            self.p = nn.Parameter(torch.rand(out_dim)*3+1) 
             print("pnorm")
         elif neighbor_aggr == "planar":
             print("Not implemented")
@@ -106,14 +107,17 @@ class CustomGATHeadLayer(nn.Module):
         p = torch.clamp(self.p,1,100)
         alpha = F.softmax(nodes.mailbox['e'], dim=1)
         alpha = F.dropout(alpha, self.dropout, training=self.training)
-        h = torch.sum((alpha * nodes.mailbox['z']).pow(p), dim=1).pow(1/p)
-        return {'h': h}
+        eps = 1e-6
+        h = alpha * nodes.mailbox['z']
+        a = torch.max(h)
+        h = torch.abs(h/a + eps).pow(p)
+        return {'h': (torch.sum(h, dim=1) + eps).pow(1/p)*a}
 
     def forward(self, g, h, e):
         z = self.fc(h)
         g.ndata['z'] = z
         g.apply_edges(self.edge_attention)
-        g.update_all(self.message_func, self.reduce_func)
+        g.update_all(self.message_func, self._reduce)
         h = g.ndata['h']
         
         if self.batch_norm:
