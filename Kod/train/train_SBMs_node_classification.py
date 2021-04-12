@@ -67,6 +67,7 @@ def train_epoch_sparse(model, optimizer, device, data_loader, epoch):
             print("layer: ", idx, ", E: ", l.E.weight)
             print("layer: ", idx, ", .gradE: ", l.E.weight.grad) """
         optimizer.step()
+        torch.cuda.empty_cache()
         epoch_loss += loss.detach().item()
         epoch_train_acc += accuracy(batch_scores, batch_labels)
     epoch_loss /= (iter + 1)
