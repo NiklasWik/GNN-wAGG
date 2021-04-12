@@ -109,9 +109,10 @@ class CustomGATHeadLayer(nn.Module):
         alpha = F.dropout(alpha, self.dropout, training=self.training)
         eps = 1e-6
         h = alpha * nodes.mailbox['z']
-        a = torch.max(h)
-        h = torch.abs(h/a + eps).pow(p)
-        return {'h': (torch.sum(h, dim=1) + eps).pow(1/p)*a}
+        #a = torch.max(h)
+        #h = torch.abs(h/a + eps).pow(p)
+        h = torch.abs(h + eps).pow(p)
+        return {'h': (torch.sum(h, dim=1) + eps).pow(1/p)} #(torch.sum(h, dim=1) + eps).pow(1/p)*a
 
     def forward(self, g, h, e):
         z = self.fc(h)
