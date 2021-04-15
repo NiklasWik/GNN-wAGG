@@ -47,7 +47,7 @@ class GraphSageLayer(nn.Module):
             elif aggregator_type == "planar":
                 print("planar")
                 self._reducer = self.reduce_planar
-                self.w = nn.Parameter(torch.rand(in_feats)*(-6)-1)
+                self.w = nn.Parameter(torch.rand(in_feats)*(-6)-6)
                 self.b = nn.Parameter(torch.rand(1)*(-1))
             else:
                 self.aggregator = MeanAggregator()
