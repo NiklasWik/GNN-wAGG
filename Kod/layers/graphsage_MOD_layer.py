@@ -47,11 +47,11 @@ class GraphSageLayer(nn.Module):
             elif aggregator_type == "planar":
                 print("planar")
                 self._reducer = self.reduce_planar
-                self.w = nn.Parameter(torch.rand(in_feats)-1)
+                self.w = nn.Parameter(torch.rand(in_feats)+1)
                 self.b = nn.Parameter(torch.rand(1)+1)
             else:
                 self.aggregator = MeanAggregator()
-                print("DU KÖR MED MEAN???")
+                print("DU KÖR MED MEAN??? DET HÄR FUNKAR INTE")
         else:
             self.sageconv = SAGEConv(in_feats, out_feats, aggregator_type,
                     dropout, activation=activation)
@@ -101,8 +101,6 @@ class GraphSageLayer(nn.Module):
             
         g.update_all(fn.copy_src('h', 'm'), self._reducer, self.nodeapply)
             
-        """ else:
-            g.update_all(fn.copy_src('h', 'm'), fn.mean('m', 'c'), self.nodeapply) """
         h = g.ndata['h']
         #else:
         #    h = self.sageconv(g, h)
