@@ -27,7 +27,7 @@ class GraphSage_MOD_Net(nn.Module):
         n_classes = net_params['n_classes']
         in_feat_dropout = net_params['in_feat_dropout']
         dropout = net_params['dropout']
-        aggregator_type = net_params['sage_aggregator']
+        aggregator_type = net_params['neighbor_aggr']
         n_layers = net_params['L']   
         batch_norm = net_params['batch_norm']
         residual = net_params['residual']
