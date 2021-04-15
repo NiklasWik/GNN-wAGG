@@ -24,7 +24,7 @@ class GatedTestLayer(nn.Module):
         
         if aggr_type == "pnorm":
             self._reducer = self.reduce_p
-            self.P = nn.Parameter(torch.rand(output_dim)*1+1)
+            self.P = nn.Parameter(torch.rand(output_dim)*6+1)
         elif aggr_type == "planar":
             self._reducer = self.reduce_fp
             self.w = nn.Parameter(torch.rand(output_dim)+1)
