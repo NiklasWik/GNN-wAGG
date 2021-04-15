@@ -51,6 +51,7 @@ class GraphSageLayer(nn.Module):
                 self.b = nn.Parameter(torch.rand(1)+1)
             else:
                 self.aggregator = MeanAggregator()
+                print("DU KÖR MED MEAN???")
         else:
             self.sageconv = SAGEConv(in_feats, out_feats, aggregator_type,
                     dropout, activation=activation)
