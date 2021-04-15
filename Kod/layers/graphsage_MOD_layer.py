@@ -75,7 +75,7 @@ class GraphSageLayer(nn.Module):
         w = torch.exp(self.w)
         msg = torch.abs(nodes.mailbox['m'])
         fsum = torch.sum(torch.sigmoid(w*msg+self.b), dim=1)
-        sig_in = torch.clamp(fsum, 0.001, 0.999)
+        sig_in = torch.clamp(fsum/torch.max(fsum), 0.000001, 0.9999999)
         print(torch.min(sig_in))
         out_h = (torch.log(sig_in/(1-sig_in))-self.b)/w
         return {'c': out_h}
