@@ -32,18 +32,23 @@ class GraphSageLayer(nn.Module):
         if dgl_builtin == False:
             self.nodeapply = NodeApply(in_feats, out_feats, activation, dropout,
                                    bias=bias)
+            self.linear = nn.Linear(in_feats, out_feats, bias=bias)
+            self.activation = activation
             if aggregator_type == "maxpool":
-                self.aggregator = MaxPoolAggregator(in_feats, in_feats,
-                                                    activation, bias)
+                #self.aggregator = MaxPoolAggregator(in_feats, in_feats, activation, bias)
+                print("max")
+                self._reducer = self.maxreduce
             elif aggregator_type == "lstm":
                 self.aggregator = LSTMAggregator(in_feats, in_feats)
             elif aggregator_type == "pnorm":
                 print("pnorm")
-                #self.aggregator = PnormAggregator(in_feats, in_feats,
-                                                    #activation, bias)
-                self.linear = nn.Linear(in_feats, out_feats, bias=bias)
                 self.power = nn.Parameter(torch.rand(in_feats)*6+1) 
-                self.activation = activation
+                self._reducer = self.reduce_p
+            elif aggregator_type == "planar":
+                print("planar")
+                self._reducer = self.reduce_planar
+                self.w = nn.Parameter(torch.rand(in_feats)-1)
+                self.b = nn.Parameter(torch.rand(1)+1)
             else:
                 self.aggregator = MeanAggregator()
         else:
@@ -52,6 +57,9 @@ class GraphSageLayer(nn.Module):
         
         if self.batch_norm:
             self.batchnorm_h = nn.BatchNorm1d(out_feats)
+
+    def maxreduce(self, nodes):
+        return {'c': torch.max(nodes.mailbox['m'], dim=1)}
 
     def reduce_p(self, nodes):
         #p = torch.clamp(self.aggregator.power,1,100)
@@ -62,39 +70,41 @@ class GraphSageLayer(nn.Module):
         h = torch.pow(torch.div(h,alpha) + eps ,p)
         return {'c': torch.pow(torch.sum(h, dim=1) + eps ,torch.div(1,p))*alpha}
 
-        """ alpha = torch.max(h)
-        h = (h/alpha).pow(p)
-        return {'neigh': (torch.sum(h, dim=1).pow(1/p))*alpha} """
+    def reduce_planar(self, nodes):
+        w = torch.exp(self.w)
+        msg = torch.abs(nodes.mailbox['m'])
+        fsum = torch.sum(torch.sigmoid(w*msg+self.b), dim=1)
+        sig_in = torch.clamp(fsum, 0.000001, 0.999999)
+        out_h = (torch.log(sig_in/(1-sig_in))-self.b)/w
+        return {'c': out_h}
+
 
     def forward(self, g, h):
         h_in = h              # for residual connection
         
-        if self.dgl_builtin == False:
-            h = self.dropout(h)
-            g.ndata['h'] = h
-            #g.update_all(fn.copy_src(src='h', out='m'), 
-            #             self.aggregator,
-            #             self.nodeapply)
-            if self.aggregator_type == 'maxpool':
-                g.ndata['h'] = self.aggregator.linear(g.ndata['h'])
-                g.ndata['h'] = self.aggregator.activation(g.ndata['h'])
-                g.update_all(fn.copy_src('h', 'm'), fn.max('m', 'c'), self.nodeapply)
-            elif self.aggregator_type == 'lstm':
-                g.update_all(fn.copy_src(src='h', out='m'), 
-                             self.aggregator,
-                             self.nodeapply)
-            elif self.aggregator_type == 'pnorm':
-                """ g.ndata['h'] = self.aggregator.linear(g.ndata['h'])
-                g.ndata['h'] = self.aggregator.activation(g.ndata['h']) """
-                g.ndata['h'] = self.linear(g.ndata['h'])
-                g.ndata['h'] = self.activation(g.ndata['h'])
-                g.update_all(fn.copy_src('h', 'm'), self.reduce_p, self.nodeapply)
-                
-            else:
-                g.update_all(fn.copy_src('h', 'm'), fn.mean('m', 'c'), self.nodeapply)
-            h = g.ndata['h']
-        else:
-            h = self.sageconv(g, h)
+        #if self.dgl_builtin == False:
+        h = self.dropout(h)
+        g.ndata['h'] = h
+        #g.update_all(fn.copy_src(src='h', out='m'), 
+        #             self.aggregator,
+        #             self.nodeapply)
+        #if self.aggregator_type == 'maxpool':
+        g.ndata['h'] = self.linear(g.ndata['h'])
+        g.ndata['h'] = self.activation(g.ndata['h'])
+        #g.update_all(fn.copy_src('h', 'm'), fn.max('m', 'c'), self.nodeapply)
+        """ elif self.aggregator_type == 'lstm':
+            g.update_all(fn.copy_src(src='h', out='m'), 
+                            self.aggregator,
+                            self.nodeapply) """
+        #elif self.aggregator_type == 'pnorm':
+            
+        g.update_all(fn.copy_src('h', 'm'), self._reducer, self.nodeapply)
+            
+        """ else:
+            g.update_all(fn.copy_src('h', 'm'), fn.mean('m', 'c'), self.nodeapply) """
+        h = g.ndata['h']
+        #else:
+        #    h = self.sageconv(g, h)
 
         if self.batch_norm:
             h = self.batchnorm_h(h)
