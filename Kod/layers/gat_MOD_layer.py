@@ -82,6 +82,9 @@ class CustomGATHeadLayer(nn.Module):
         if neighbor_aggr == "pnorm":
             self._reduce = self.reduce_p
             self.p = nn.Parameter(torch.rand(out_dim)*3+1)
+        elif neighbor_aggr == "pnorm_robust":
+            self._reduce = self.reduce_p_robust
+            self.p = nn.Parameter(torch.rand(out_dim)*3+1)
         elif neighbor_aggr == "planar_sigmoid":
             self._reduce = self.reduce_planar_sigmoid
             self.w = nn.Parameter(torch.rand(out_dim)-1/2)
