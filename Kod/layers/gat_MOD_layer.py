@@ -81,11 +81,16 @@ class CustomGATHeadLayer(nn.Module):
         self.batchnorm_h = nn.BatchNorm1d(out_dim)
         if neighbor_aggr == "pnorm":
             self._reduce = self.reduce_p
-            self.p = nn.Parameter(torch.rand(out_dim)*3+1) 
-            print("pnorm")
-        elif neighbor_aggr == "planar":
-            print("Not implemented")
+            self.p = nn.Parameter(torch.rand(out_dim)*3+1)
+        elif neighbor_aggr == "planar_sigmoid":
+            self._reduce = self.reduce_planar_sigmoid
+            self.w = nn.Parameter(torch.rand(out_dim)-1/2)
+            self.b = nn.Parameter(torch.rand(out_dim)-1/2)
+        elif neighbor_aggr == "planar_leaky":
+            raise NotImplementedError('Planar with LeakyReLU not implemented in layer.')
+            #self._reduce = self.reduce_planar_leaky
         else:
+            print("None of the proposed aggregation funcs used. use arg --neighbor_agg")
             self._reduce = self.reduce_func
 
 
@@ -103,16 +108,44 @@ class CustomGATHeadLayer(nn.Module):
         h = torch.sum(alpha * nodes.mailbox['z'], dim=1)
         return {'h': h}
 
+    def reduce_planar_sigmoid(self, nodes):
+        w = torch.exp(self.w)
+        msg = torch.abs(nodes.mailbox['e'])
+        fsum = torch.sum(torch.sigmoid(w*msg+self.b), dim=1)
+        sig_in = torch.clamp(fsum/torch.max(fsum), 0.000001, 0.9999999)
+        out_h = (torch.log(sig_in/(1-sig_in))-self.b)/w
+        return {'h': out_h}
+        
+    def reduce_planar_leaky(self, nodes):
+        """
+        Not Implemented
+        sigmoid clone below
+        """
+        w = torch.exp(self.w)
+        msg = torch.abs(nodes.mailbox['e'])
+        fsum = torch.sum(torch.sigmoid(w*msg+self.b), dim=1)
+        sig_in = torch.clamp(fsum/torch.max(fsum), 0.000001, 0.9999999)
+        out_h = (torch.log(sig_in/(1-sig_in))-self.b)/w
+        return {'h': out_h}
+
     def reduce_p(self, nodes):
         p = torch.clamp(self.p,1,100)
         alpha = F.softmax(nodes.mailbox['e'], dim=1)
         alpha = F.dropout(alpha, self.dropout, training=self.training)
         eps = 1e-6
         h = alpha * nodes.mailbox['z']
-        #a = torch.max(h)
-        #h = torch.abs(h/a + eps).pow(p)
         h = torch.abs(h + eps).pow(p)
-        return {'h': (torch.sum(h, dim=1) + eps).pow(1/p)} #(torch.sum(h, dim=1) + eps).pow(1/p)*a
+        return {'h': (torch.sum(h, dim=1) + eps).pow(1/p)}
+    
+    def reduce_p_robust(self, nodes):
+        p = torch.clamp(self.p,1,100)
+        alpha = F.softmax(nodes.mailbox['e'], dim=1)
+        alpha = F.dropout(alpha, self.dropout, training=self.training)
+        eps = 1e-6
+        h = alpha * nodes.mailbox['z']
+        a = torch.max(h)
+        h = torch.abs(h/a + eps).pow(p)
+        return {'h': (torch.sum(h, dim=1) + eps).pow(1/p)*a}
 
     def forward(self, g, h, e):
         z = self.fc(h)
