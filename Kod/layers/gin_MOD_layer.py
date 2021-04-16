@@ -91,7 +91,7 @@ class GIN_MOD_Layer(nn.Module):
         fsum = torch.sum(torch.sigmoid(w*msg+self.b), dim=1)
         sig_in = torch.clamp(fsum/torch.max(fsum), 0.000001, 0.9999999)
         out_h = (torch.log(sig_in/(1-sig_in))-self.b)/w
-        return {'c': out_h}
+        return {'neigh': out_h}
 
     def forward(self, g, h):
         h_in = h # for residual connection
