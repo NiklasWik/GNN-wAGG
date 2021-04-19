@@ -115,7 +115,7 @@ class CustomGATHeadLayer(nn.Module):
         w = torch.exp(self.w)
         msg = torch.abs(nodes.mailbox['e'])
         fsum = torch.sum(torch.sigmoid(w*msg+self.b), dim=1)
-        print(torch.min(fsum))
+        print(fsum)
         #sig_in = torch.clamp(fsum/torch.max(fsum), 0.000001, 0.9999999)
         sig_in = torch.clamp(fsum, 0.000001, 0.9999999)
         out_h = (torch.log(sig_in/(1-sig_in))-self.b)/w
