@@ -88,7 +88,7 @@ class CustomGATHeadLayer(nn.Module):
         elif neighbor_aggr == "planar_sigmoid":
             self._reduce = self.reduce_planar_sigmoid
             self.w = nn.Parameter((torch.rand(out_dim)-1/2)*1e-6)
-            self.b = nn.Parameter((torch.rand(1)-1/2)-100)
+            self.b = nn.Parameter((torch.rand(out_dim)-1/2)-100)
         elif neighbor_aggr == "planar_leaky":
             raise NotImplementedError('Planar with LeakyReLU not implemented in layer.')
             #self._reduce = self.reduce_planar_leaky
@@ -116,7 +116,8 @@ class CustomGATHeadLayer(nn.Module):
         msg = torch.abs(nodes.mailbox['e'])
         fsum = torch.sum(torch.sigmoid(w*msg+self.b), dim=1)
         print(torch.min(fsum))
-        sig_in = torch.clamp(fsum/torch.max(fsum), 0.000001, 0.9999999)
+        #sig_in = torch.clamp(fsum/torch.max(fsum), 0.000001, 0.9999999)
+        sig_in = torch.clamp(fsum, 0.000001, 0.9999999)
         out_h = (torch.log(sig_in/(1-sig_in))-self.b)/w
         return {'h': out_h}
         
