@@ -55,8 +55,8 @@ class GIN_MOD_Layer(nn.Module):
         elif aggr_type == 'planar_sig':
             print("planar_sig")
             self._reducer = self.reduce_sig
-            self.w = nn.Parameter(torch.rand(in_dim)*1-1/2)
-            self.b = nn.Parameter(torch.rand(in_dim)*1-1/2)
+            self.w = nn.Parameter(torch.rand(in_dim)*1)
+            self.b = nn.Parameter(torch.rand(in_dim)*1)
         else:
             raise KeyError('Aggregator type {} not recognized.'.format(aggr_type))
 
