@@ -87,8 +87,8 @@ class CustomGATHeadLayer(nn.Module):
             self.p = nn.Parameter(torch.rand(out_dim)*3+1)
         elif neighbor_aggr == "planar_sigmoid":
             self._reduce = self.reduce_planar_sigmoid
-            self.w = nn.Parameter((torch.rand(out_dim)-1/2)*1e-6)
-            self.b = nn.Parameter((torch.rand(out_dim)-1/2)-100)
+            self.w = nn.Parameter(torch.rand(out_dim)-1/2)
+            self.b = nn.Parameter((torch.rand(out_dim)-1/2)-10)
         elif neighbor_aggr == "planar_leaky":
             raise NotImplementedError('Planar with LeakyReLU not implemented in layer.')
             #self._reduce = self.reduce_planar_leaky
