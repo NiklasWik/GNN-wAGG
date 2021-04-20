@@ -223,7 +223,6 @@ def train_val_pipeline(MODEL_NAME, dataset, params, net_params, dirs):
                     break
     
     except KeyboardInterrupt:
-        if 
         print('-' * 89)
         print('Exiting from training early because of KeyboardInterrupt')
         
