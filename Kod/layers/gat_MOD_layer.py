@@ -119,6 +119,8 @@ class CustomGATHeadLayer(nn.Module):
         #sig_in = torch.clamp(fsum/torch.max(fsum), 0.000001, 0.9999999)
         maxn = torch.max(torch.abs(fsum))
         sig_in = .99*fsum/maxn+.05
+        print("maxn: "+maxn)
+        print("sig_in: "+ sig_in)
         out_h = (torch.log(sig_in/(1-sig_in))-self.b)/w
         return {'h': out_h}
         
