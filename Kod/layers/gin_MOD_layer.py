@@ -46,10 +46,17 @@ class GIN_MOD_Layer(nn.Module):
         out_dim = apply_func.mlp.output_dim
 
         if aggr_type == 'sum':
+            print("sum")
             self._reducer = self.reduce_sum
         elif aggr_type == 'pnorm':
+            print("pnorm")
             self._reducer = self.reduce_p
             self.p = nn.Parameter(torch.rand(in_dim)*6+1)
+        elif aggr_type == 'planar_sig':
+            print("planar_sig")
+            self._reducer = self.reduce_sig
+            self.w = nn.Parameter(torch.rand(in_dim)*1)
+            self.b = nn.Parameter(torch.rand(in_dim)*1)
         else:
             raise KeyError('Aggregator type {} not recognized.'.format(aggr_type))
 
@@ -72,16 +79,19 @@ class GIN_MOD_Layer(nn.Module):
     def reduce_p(self, nodes):
         p = torch.clamp(self.p,1,100)
         h = torch.abs(nodes.mailbox['m'])
-        #h = nodes.mailbox['m'] - torch.min(h) + 1e-6
-        #h = torch.exp(nodes.mailbox['m'])
-        
-        #h = h.pow(p)
-        #return {'neigh': (torch.sum(h, dim=1).pow(1/p))}
 
         eps = 1e-6
         alpha = torch.max(h)
         h = torch.pow(torch.div(h,alpha) + eps ,p)
         return {'neigh': torch.pow(torch.sum(h, dim=1) + eps ,torch.div(1,p))*alpha}
+
+    def reduce_sig(self, nodes):
+        w = torch.exp(self.w)
+        msg = torch.abs(nodes.mailbox['m'])
+        fsum = torch.sum(torch.sigmoid(w*msg+self.b), dim=1)
+        sig_in = torch.clamp(fsum/torch.max(fsum), 0.000001, 0.9999999)
+        out_h = (torch.log(sig_in/(1-sig_in))-self.b)/w
+        return {'neigh': out_h}
 
     def forward(self, g, h):
         h_in = h # for residual connection

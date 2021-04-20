@@ -1,8 +1,3 @@
-
-
-
-
-
 """
     IMPORTING LIBS
 """
@@ -230,7 +225,7 @@ def train_val_pipeline(MODEL_NAME, dataset, params, net_params, dirs):
     except KeyboardInterrupt:
         print('-' * 89)
         print('Exiting from training early because of KeyboardInterrupt')
-    
+        
     import scipy.io as sio
     sio.savemat('accs.mat', dict(training=trainvec, testing=testvec))
     np.savetxt("trainvec.txt",trainvec)

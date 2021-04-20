@@ -29,32 +29,27 @@ class GraphSageLayer(nn.Module):
         
         self.dropout = nn.Dropout(p=dropout)
 
-        if dgl_builtin == False:
-            self.nodeapply = NodeApply(in_feats, out_feats, activation, dropout,
-                                   bias=bias)
-            self.linear = nn.Linear(in_feats, out_feats, bias=bias)
-            self.activation = activation
-            if aggregator_type == "maxpool":
-                #self.aggregator = MaxPoolAggregator(in_feats, in_feats, activation, bias)
-                print("max")
-                self._reducer = self.maxreduce
-            elif aggregator_type == "lstm":
-                self.aggregator = LSTMAggregator(in_feats, in_feats)
-            elif aggregator_type == "pnorm":
-                print("pnorm")
-                self.power = nn.Parameter(torch.rand(in_feats)*6+1) 
-                self._reducer = self.reduce_p
-            elif aggregator_type == "planar":
-                print("planar")
-                self._reducer = self.reduce_planar
-                self.w = nn.Parameter(torch.rand(in_feats)+1)
-                self.b = nn.Parameter(torch.rand(1)+1)
-            else:
-                self.aggregator = MeanAggregator()
-                print("DU KÖR MED MEAN??? DET HÄR FUNKAR INTE")
+        
+        self.nodeapply = NodeApply(in_feats, out_feats, activation, dropout,
+                                bias=bias)
+        self.linear = nn.Linear(in_feats, out_feats, bias=bias)
+        self.activation = activation
+        if aggregator_type == "maxpool":
+            print("max")
+            self._reducer = self.maxreduce
+        elif aggregator_type == "pnorm":
+            print("pnorm")
+            self.power = nn.Parameter(torch.rand(in_feats)*6+1) 
+            self._reducer = self.reduce_p
+        elif aggregator_type == "planar_sig":
+            print("planar_sig")
+            self._reducer = self.reduce_planar
+            self.w = nn.Parameter(torch.rand(in_feats)*1)
+            self.b = nn.Parameter(torch.rand(in_feats)*1)
         else:
-            self.sageconv = SAGEConv(in_feats, out_feats, aggregator_type,
-                    dropout, activation=activation)
+            self.aggregator = MeanAggregator()
+            print("DU KÖR MED MEAN??? DET HÄR FUNKAR INTE")
+        
         
         if self.batch_norm:
             self.batchnorm_h = nn.BatchNorm1d(out_feats)
@@ -75,8 +70,7 @@ class GraphSageLayer(nn.Module):
         w = torch.exp(self.w)
         msg = torch.abs(nodes.mailbox['m'])
         fsum = torch.sum(torch.sigmoid(w*msg+self.b), dim=1)
-        sig_in = torch.clamp(fsum, 0.001, 0.999)
-        print(torch.min(sig_in))
+        sig_in = torch.clamp(fsum/torch.max(fsum), 0.000001, 0.9999999)
         out_h = (torch.log(sig_in/(1-sig_in))-self.b)/w
         return {'c': out_h}
 
@@ -84,27 +78,14 @@ class GraphSageLayer(nn.Module):
     def forward(self, g, h):
         h_in = h              # for residual connection
         
-        #if self.dgl_builtin == False:
         h = self.dropout(h)
         g.ndata['h'] = h
-        #g.update_all(fn.copy_src(src='h', out='m'), 
-        #             self.aggregator,
-        #             self.nodeapply)
-        #if self.aggregator_type == 'maxpool':
         g.ndata['h'] = self.linear(g.ndata['h'])
         g.ndata['h'] = self.activation(g.ndata['h'])
-        #g.update_all(fn.copy_src('h', 'm'), fn.max('m', 'c'), self.nodeapply)
-        """ elif self.aggregator_type == 'lstm':
-            g.update_all(fn.copy_src(src='h', out='m'), 
-                            self.aggregator,
-                            self.nodeapply) """
-        #elif self.aggregator_type == 'pnorm':
-            
+        
         g.update_all(fn.copy_src('h', 'm'), self._reducer, self.nodeapply)
             
         h = g.ndata['h']
-        #else:
-        #    h = self.sageconv(g, h)
 
         if self.batch_norm:
             h = self.batchnorm_h(h)
@@ -120,115 +101,7 @@ class GraphSageLayer(nn.Module):
                                               self.out_channels, self.aggregator_type, self.residual)
 
     
-    
-"""
-    Aggregators for GraphSage
-"""
-class Aggregator(nn.Module):
-    """
-    Base Aggregator class. 
-    """
 
-    def __init__(self):
-        super().__init__()
-
-    def forward(self, node):
-        neighbour = node.mailbox['m']
-        c = self.aggre(neighbour)
-        return {"c": c}
-
-    def aggre(self, neighbour):
-        # N x F
-        raise NotImplementedError
-
-
-class MeanAggregator(Aggregator):
-    """
-    Mean Aggregator for graphsage
-    """
-
-    def __init__(self):
-        super().__init__()
-
-    def aggre(self, neighbour):
-        mean_neighbour = torch.mean(neighbour, dim=1)
-        return mean_neighbour
-
-class PnormAggregator(Aggregator):
-    """
-    Maxpooling aggregator for graphsage
-    """
-
-    def __init__(self, in_feats, out_feats, activation, bias):
-        super().__init__()
-        self.linear = nn.Linear(in_feats, out_feats, bias=bias)
-        self.power = nn.Parameter(torch.rand(in_feats)*6+1) 
-        self.activation = activation
-
-    """ def aggre(self, neighbour):
-        neighbour = self.linear(neighbour)
-        if self.activation:
-            neighbour = self.activation(neighbour)
-        neighbour = neighbour.pow(self.power)
-        pnorm_neighbour = torch.sum(neighbour, dim=1).pow(1/self.power)
-        return pnorm_neighbour """
-
-
-class MaxPoolAggregator(Aggregator):
-    """
-    Maxpooling aggregator for graphsage
-    """
-
-    def __init__(self, in_feats, out_feats, activation, bias):
-        super().__init__()
-        self.linear = nn.Linear(in_feats, out_feats, bias=bias)
-        self.activation = activation
-
-    def aggre(self, neighbour):
-        neighbour = self.linear(neighbour)
-        if self.activation:
-            neighbour = self.activation(neighbour)
-        maxpool_neighbour = torch.max(neighbour, dim=1)[0]
-        return maxpool_neighbour
-
-
-class LSTMAggregator(Aggregator):
-    """
-    LSTM aggregator for graphsage
-    """
-
-    def __init__(self, in_feats, hidden_feats):
-        super().__init__()
-        self.lstm = nn.LSTM(in_feats, hidden_feats, batch_first=True)
-        self.hidden_dim = hidden_feats
-        self.hidden = self.init_hidden()
-
-        nn.init.xavier_uniform_(self.lstm.weight,
-                                gain=nn.init.calculate_gain('relu'))
-
-    def init_hidden(self):
-        """
-        Defaulted to initialite all zero
-        """
-        return (torch.zeros(1, 1, self.hidden_dim),
-                torch.zeros(1, 1, self.hidden_dim))
-
-    def aggre(self, neighbours):
-        """
-        aggregation function
-        """
-        # N X F
-        rand_order = torch.randperm(neighbours.size()[1])
-        neighbours = neighbours[:, rand_order, :]
-
-        (lstm_out, self.hidden) = self.lstm(neighbours.view(neighbours.size()[0], neighbours.size()[1], -1))
-        return lstm_out[:, -1, :]
-
-    def forward(self, node):
-        neighbour = node.mailbox['m']
-        c = self.aggre(neighbour)
-        return {"c": c}
-    
     
 class NodeApply(nn.Module):
     """
