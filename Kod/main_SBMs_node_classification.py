@@ -251,8 +251,8 @@ def train_val_pipeline(MODEL_NAME, dataset, params, net_params, dirs):
                   test_acc, train_acc, epoch, (time.time()-start0)/3600, np.mean(per_epoch_time), torch.cuda.get_device_name(0)))
     
     with open(write_file_name_mail + '.txt', 'w') as f:
-        f.write("""model: {}\ngpu: {}\ndataset: {}\nparams: {}\ntestacc: {}\ntrainacc: {}\nepochs: {}\navg_time_per_epoch: {:.4f}\ntotal_time: {}\ndate: {}"""\
-          .format(MODEL_NAME, torch.cuda.get_device_name(0), DATASET_NAME, net_params['total_param'],\
+        f.write("""model: {}\ngpu: {}\ndataset: {}\naggr_func: {}\nparams: {}\ntestacc: {}\ntrainacc: {}\nepochs: {}\navg_time_per_epoch: {:.4f}\ntotal_time: {}\ndate: {}"""\
+          .format(MODEL_NAME, torch.cuda.get_device_name(0), DATASET_NAME, net_params['neighbor_aggr'], net_params['total_param'],\
             test_acc, train_acc, epoch, np.mean(per_epoch_time, (time.time()-start0)/3600), time.strftime("%d/%m/%Y")))
 
 
