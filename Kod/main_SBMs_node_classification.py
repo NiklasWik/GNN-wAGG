@@ -104,6 +104,7 @@ def train_val_pipeline(MODEL_NAME, dataset, params, net_params, dirs):
             print("[!] Adding graph positional encoding.")
             dataset._add_positional_encodings(net_params['pos_enc_dim'])
             print('Time PE:',time.time()-start0)
+
     if MODEL_NAME in ['GatedTest', 'GINmod', 'GraphSageMOD', 'GATmod']
         print('Seed: ', params['seed'])
         print('Aggregation function: ', net_params['neighbor_aggr'])
@@ -254,7 +255,7 @@ def train_val_pipeline(MODEL_NAME, dataset, params, net_params, dirs):
     with open(write_file_name_mail + '.txt', 'w') as f2:
         f2.write("""model: {}\ngpu: {}\ndataset: {}\naggr_func: {}\nparams: {}\ntestacc: {}\ntrainacc: {}\nepochs: {}\navg_time_per_epoch: {:.4f}\ntotal_time: {}\ndate: {}"""\
           .format(MODEL_NAME, torch.cuda.get_device_name(0), DATASET_NAME, net_params['neighbor_aggr'], net_params['total_param'],\
-            test_acc, train_acc, epoch, np.mean(per_epoch_time, (time.time()-start0)/3600), time.strftime("%d/%m/%Y")))
+            test_acc, train_acc, epoch, np.mean(per_epoch_time), (time.time()-start0)/3600, time.strftime("%d/%m/%Y")))
 
 
 
