@@ -109,7 +109,7 @@ def train_val_pipeline(MODEL_NAME, dataset, params, net_params, dirs):
         
     trainset, valset, testset = dataset.train, dataset.val, dataset.test
         
-    root_log_dir, root_ckpt_dir, write_file_name, write_config_file = dirs
+    root_log_dir, root_ckpt_dir, write_file_name, write_config_file, write_file_name_mail = dirs
     device = net_params['device']
     
     # Write network and optimization hyper-parameters in folder config/
@@ -416,9 +416,9 @@ def main():
     root_log_dir = out_dir + 'logs/' + MODEL_NAME + "_" + DATASET_NAME + "_GPU" + str(config['gpu']['id']) + "_" + time.strftime('%Hh%Mm%Ss_on_%b_%d_%Y')
     root_ckpt_dir = out_dir + 'checkpoints/' + MODEL_NAME + "_" + DATASET_NAME + "_GPU" + str(config['gpu']['id']) + "_" + time.strftime('%Hh%Mm%Ss_on_%b_%d_%Y')
     write_file_name = out_dir + 'results/result_' + MODEL_NAME + "_" + DATASET_NAME + "_GPU" + str(config['gpu']['id']) + "_" + time.strftime('%Hh%Mm%Ss_on_%b_%d_%Y')
-    write_file_name_mail = out_dir + 'results/mailresults'
     write_config_file = out_dir + 'configs/config_' + MODEL_NAME + "_" + DATASET_NAME + "_GPU" + str(config['gpu']['id']) + "_" + time.strftime('%Hh%Mm%Ss_on_%b_%d_%Y')
-    dirs = root_log_dir, root_ckpt_dir, write_file_name, write_config_file
+    write_file_name_mail = out_dir + 'results/mailresults'
+    dirs = root_log_dir, root_ckpt_dir, write_file_name, write_config_file, write_file_name_mail
 
     if not os.path.exists(out_dir + 'results'):
         os.makedirs(out_dir + 'results')
