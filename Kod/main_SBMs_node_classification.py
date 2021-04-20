@@ -100,13 +100,14 @@ def train_val_pipeline(MODEL_NAME, dataset, params, net_params, dirs):
             dataset._add_self_loops()
     
     if MODEL_NAME in ['GatedGCN', 'GatedTest']:
-        print('Seed: ', params['seed'])
-        print('Aggregation function: ', net_params['neighbor_aggr'])
         if net_params['pos_enc']:
             print("[!] Adding graph positional encoding.")
             dataset._add_positional_encodings(net_params['pos_enc_dim'])
             print('Time PE:',time.time()-start0)
-        
+    if MODEL_NAME in ['GatedTest', 'GINmod', 'GraphSageMOD', 'GATmod']
+        print('Seed: ', params['seed'])
+        print('Aggregation function: ', net_params['neighbor_aggr'])
+    
     trainset, valset, testset = dataset.train, dataset.val, dataset.test
         
     root_log_dir, root_ckpt_dir, write_file_name, write_config_file, write_file_name_mail = dirs
