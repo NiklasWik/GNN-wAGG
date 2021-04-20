@@ -6,7 +6,7 @@
     
     "model": "GATmod",
     "dataset": "SBM_PATTERN",
-    
+
     "out_dir": "out/GATmod/",
     
     "params": {

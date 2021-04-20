@@ -223,6 +223,7 @@ def train_val_pipeline(MODEL_NAME, dataset, params, net_params, dirs):
                     break
     
     except KeyboardInterrupt:
+        if 
         print('-' * 89)
         print('Exiting from training early because of KeyboardInterrupt')
         
@@ -249,9 +250,11 @@ def train_val_pipeline(MODEL_NAME, dataset, params, net_params, dirs):
     Convergence Time (Epochs): {:.4f}\nTotal Time Taken: {:.4f} hrs\nAverage Time Per Epoch: {:.4f} s\n GPU: {}\n\n\n"""\
           .format(DATASET_NAME, MODEL_NAME, params, net_params, model, net_params['total_param'],
                   test_acc, train_acc, epoch, (time.time()-start0)/3600, np.mean(per_epoch_time), torch.cuda.get_device_name(0)))
-
-        
-
+    
+    with open(write_file_name_mail + '.txt', 'w') as f:
+        f.write("""model: {}\ngpu: {}\ndataset: {}\nparams: {}\ntestacc: {}\ntrainacc: {}\nepochs: {}\navg_time_per_epoch: {:.4f}\ntotal_time: {}\ndate: {}"""\
+          .format(MODEL_NAME, torch.cuda.get_device_name(0), DATASET_NAME, net_params['total_param'],\
+            test_acc, train_acc, epoch, np.mean(per_epoch_time, (time.time()-start0)/3600), time.strftime("%d/%m/%Y")))
 
 
 
@@ -414,6 +417,7 @@ def main():
     root_log_dir = out_dir + 'logs/' + MODEL_NAME + "_" + DATASET_NAME + "_GPU" + str(config['gpu']['id']) + "_" + time.strftime('%Hh%Mm%Ss_on_%b_%d_%Y')
     root_ckpt_dir = out_dir + 'checkpoints/' + MODEL_NAME + "_" + DATASET_NAME + "_GPU" + str(config['gpu']['id']) + "_" + time.strftime('%Hh%Mm%Ss_on_%b_%d_%Y')
     write_file_name = out_dir + 'results/result_' + MODEL_NAME + "_" + DATASET_NAME + "_GPU" + str(config['gpu']['id']) + "_" + time.strftime('%Hh%Mm%Ss_on_%b_%d_%Y')
+    write_file_name_mail = out_dir + 'results/mailresults'
     write_config_file = out_dir + 'configs/config_' + MODEL_NAME + "_" + DATASET_NAME + "_GPU" + str(config['gpu']['id']) + "_" + time.strftime('%Hh%Mm%Ss_on_%b_%d_%Y')
     dirs = root_log_dir, root_ckpt_dir, write_file_name, write_config_file
 
