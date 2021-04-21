@@ -65,6 +65,7 @@ def mail_GNNs(send_to, directory, note, password='', send_accs=False):
     total_time (h): {:.4f}
     note: {}
     """.format(dictt["model"], dictt["aggr_func"], dictt["seed"], dictt["dataset"], dictt["params"], dictt["testacc"], dictt["trainacc"], dictt["epochs"], dictt["avg_time_per_epoch"], dictt["total_time"], note)
+    files = []
     files.append(dir_path+ directory + 'results/mailresults.txt')
     if send_accs == True:
         files.append('accs.mat')
