@@ -48,7 +48,7 @@ def mail_GNNs(send_to, directory, note, password=''):
     dir_path = os.path.dirname(os.path.realpath(__file__))
     print(dir_path)
 
-    #f = open(directory + 'results/mailresults.txt', "r")
+    f = open(directory + 'results/mailresults.txt', "r")
     res = []
     keys = []
     for x in f:
