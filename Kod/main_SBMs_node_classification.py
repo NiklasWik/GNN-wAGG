@@ -255,7 +255,7 @@ def train_val_pipeline(MODEL_NAME, dataset, params, net_params, dirs):
     with open(write_file_name_mail + '.txt', 'w') as f2:
         f2.write("""model: {}\ngpu: {}\ndataset: {}\naggr_func: {}\nparams: {}\nseed: {}\ntestacc: {}\ntrainacc: {}\nepochs: {}\navg_time_per_epoch: {:.4f}\ntotal_time: {}\ndate: {}"""\
           .format(MODEL_NAME, torch.cuda.get_device_name(0), DATASET_NAME, net_params['neighbor_aggr'], net_params['total_param'],\
-            params['seed'], test_acc, train_acc, epoch, np.mean(per_epoch_time), (time.time()-start0)/3600, time.strftime("%d/%m/%Y")))
+            params['seed'], test_acc, train_acc, epoch, np.mean(per_epoch_time), (time.time()-start0)/3600, time.strftime("%d/%m/%Y-%Hh-%Mm")))
 
 
 
