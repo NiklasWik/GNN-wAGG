@@ -56,7 +56,7 @@ def mail_GNNs(send_to, directory, note, password=''):
         keys.append(x.split(": ",1)[0])
     dictt = dict(zip(keys, res))
     f.close()
-    sub = dictt["model"]+", "+dictt["seed"]+", "+dictt["aggr_func"]+", "+dictt["dataset"]+", "+dictt["date"]
+    #sub = dictt["model"]+", "+dictt["seed"]+", "+dictt["aggr_func"]+", "+dictt["dataset"]+", "+dictt["date"]
     #msg = """
     #model: {}, aggr: {}
     #seed: {}, dataset: {}, params: {}
@@ -65,6 +65,7 @@ def mail_GNNs(send_to, directory, note, password=''):
     #total_time (h): {}
     #note: {}
     #""".format(dictt["model"], dictt["aggr_func"], dictt["seed"], dictt["dataset"], dictt["params"], dictt["testacc"], dictt["trainacc"], dictt["epochs"], dictt["avg_time_per_epoch"], dictt["total_time"], note)
+    sub = "bbbbbbb"
     msg = "aaaaaaa"
     files = glob.glob(directory + 'results/mailresults.txt')
     files.append('accs.mat')
