@@ -5,7 +5,7 @@ from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
 from email.utils import COMMASPACE, formatdate
 from email import encoders
-
+import glob
 
 def send_mail(send_to, subject, message, files=[], password=''):
     """Compose and send email with provided info and attachments.
@@ -42,3 +42,26 @@ def send_mail(send_to, subject, message, files=[], password=''):
     smtp.sendmail(username, send_to, msg.as_string())
     smtp.quit()
   
+def mail_GNNs(send_to, password='', directory, note):
+    f = open(directory + 'results/mailresults.txt', "r")
+    res = []
+    keys = []
+    for x in f:
+        res.append(x.split(": ",1)[1].replace('\n',''))
+        keys.append(x.split(": ",1)[0])
+    dictt = dict(zip(keys, res))
+    f.close()
+    sub = dictt["model"]+", "+dictt["seed"]+", "+dictt["aggr_func"]+", "+dictt["dataset"]+", "+dictt["date"]
+    msg = """
+    model: {}, aggr: {}
+    seed: {}, dataset: {}, params: {}
+    test_acc: {}, train_acc: {}
+    epochs: {}, avg_time_per_epoch (s): {}
+    total_time (h): {}
+    note: {}
+    """.format(dictt["model"], dictt["aggr_func"], dictt["seed"], dictt["dataset"], dictt["params"], dictt["testacc"], dictt["trainacc"],\
+        dictt["epochs"], dictt["avg_time_per_epoch"], dictt["total_time"], note)
+
+    files = glob.glob(directory + 'results/mailresults.txt')
+    files.append('accs.mat')
+    send_mail(reciever, sub, msg, files, 'gnns-wagg')
