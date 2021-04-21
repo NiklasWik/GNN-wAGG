@@ -55,6 +55,7 @@ def mail_GNNs(send_to, directory, note, password=''):
         res.append(x.split(": ",1)[1].replace('\n',''))
         keys.append(x.split(": ",1)[0])
     dictt = dict(zip(keys, res))
+    print(dictt)
     f.close()
     #sub = dictt["model"]+", "+dictt["seed"]+", "+dictt["aggr_func"]+", "+dictt["dataset"]+", "+dictt["date"]
     #msg = """
