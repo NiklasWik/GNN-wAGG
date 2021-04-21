@@ -57,10 +57,10 @@ def mail_GNNs(send_to, directory, note, password='', send_accs=False):
     sub = dictt["model"]+", "+dictt["seed"]+", "+dictt["aggr_func"]+", "+dictt["dataset"]+", "+dictt["date"]
     msg = """
     {}, {}, seed {}, {}, params: {}
-    test_acc: {:.4f}
-    train_acc: {:.4f}
+    test_acc: {}
+    train_acc: {}
     epochs: {}
-    avg_time_per_epoch (s): {:.4f}
+    avg_time_per_epoch (s): {}
     total_time (h): {}
     note: {}
     """.format(dictt["model"], dictt["aggr_func"], dictt["seed"], dictt["dataset"], dictt["params"], dictt["testacc"], dictt["trainacc"], dictt["epochs"], dictt["avg_time_per_epoch"], dictt["total_time"], note)
