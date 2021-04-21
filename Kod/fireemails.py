@@ -44,7 +44,7 @@ def send_mail(send_to, subject, message, files=[], password=''):
     smtp.sendmail(username, send_to, msg.as_string())
     smtp.quit()
   
-def mail_GNNs(send_to, directory, note, password=''):
+def mail_GNNs(send_to, directory, note, password='', send_accs=False):
     dir_path = os.path.dirname(os.path.realpath(__file__))
     print(dir_path)
 
@@ -66,5 +66,13 @@ def mail_GNNs(send_to, directory, note, password=''):
     total_time (h): {}
     note: {}""".format(dictt["model"], dictt["aggr_func"], dictt["seed"], dictt["dataset"], dictt["params"], dictt["testacc"], dictt["trainacc"], dictt["epochs"], dictt["avg_time_per_epoch"], dictt["total_time"], note)
     files = glob.glob(directory + 'results/mailresults.txt')
-    files.append('accs.mat')
+    if send_accs == True:
+        files.append('accs.mat')
     send_mail(send_to, sub, msg, files, 'gnns-wagg')
+
+note = "testing"
+dire = '/out/GatedTest/'
+#f = open(dir+'results/mailresults.txt')
+#/content/GNN-wAGG/results/mailresults.txt
+send_to = "andreascstrom@gmail.com"
+mail_GNNs(send_to, dire, note, 'gnns-wagg')
