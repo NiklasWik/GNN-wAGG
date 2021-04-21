@@ -65,7 +65,7 @@ def mail_GNNs(send_to, directory, note, password='', send_accs=False):
     epochs: {}, avg_time_per_epoch (s): {}
     total_time (h): {}
     note: {}""".format(dictt["model"], dictt["aggr_func"], dictt["seed"], dictt["dataset"], dictt["params"], dictt["testacc"], dictt["trainacc"], dictt["epochs"], dictt["avg_time_per_epoch"], dictt["total_time"], note)
-    files = glob.glob(directory + 'results/mailresults.txt')
+    files.append(directory + 'results/mailresults.txt')
     if send_accs == True:
         files.append('accs.mat')
     #send_mail(send_to, sub, msg, files, 'gnns-wagg')
