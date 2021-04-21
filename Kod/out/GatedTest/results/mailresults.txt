@@ -1,0 +1,12 @@
+model: GatedTest
+gpu: Tesla T4
+dataset: SBM_PATTERN
+aggr_func: pnorm
+params: 104283
+testacc: 84.43179681721963
+trainacc: 84.32955946457808
+epochs: 1
+seed: 41
+avg_time_per_epoch: 218.5987
+total_time: 0.1137374112341139
+date: 20/04/2021
