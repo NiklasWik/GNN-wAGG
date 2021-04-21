@@ -42,7 +42,7 @@ def send_mail(send_to, subject, message, files=[], password=''):
     smtp.sendmail(username, send_to, msg.as_string())
     smtp.quit()
   
-def mail_GNNs(send_to, password='', directory, note):
+def mail_GNNs(send_to, directory, note, password=''):
     f = open(directory + 'results/mailresults.txt', "r")
     res = []
     keys = []
