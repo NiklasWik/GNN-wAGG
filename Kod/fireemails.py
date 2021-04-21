@@ -28,7 +28,6 @@ def send_mail(send_to, subject, message, files=[], password=''):
     msg['Subject'] = subject
 
     msg.attach(MIMEText(message))
-    print("yes")
     for path in files:
         part = MIMEBase('application', "octet-stream")
         with open(path, 'rb') as file:
@@ -41,6 +40,7 @@ def send_mail(send_to, subject, message, files=[], password=''):
     smtp = smtplib.SMTP(server, port)
     smtp.starttls()
     smtp.login(username, password)
+    print("Sending results")
     smtp.sendmail(username, send_to, msg.as_string())
     smtp.quit()
   
@@ -60,23 +60,15 @@ def mail_GNNs(send_to, directory, note, password='', send_accs=False):
     print(dictt)
     sub = dictt["model"]+", "+dictt["seed"]+", "+dictt["aggr_func"]+", "+dictt["dataset"]+", "+dictt["date"]
     msg = """
-    model: {}, aggr: {}
-    seed: {}, dataset: {}, params: {}
-    test_acc: {}, train_acc: {}
-    epochs: {}, avg_time_per_epoch (s): {}
+    {}, {}, seed {}, {}, params: {}
+    test_acc: {}
+    train_acc: {}
+    epochs: {}
+    avg_time_per_epoch (s): {}
     total_time (h): {}
-    note: {}""".format(dictt["model"], dictt["aggr_func"], dictt["seed"], dictt["dataset"], dictt["params"], dictt["testacc"], dictt["trainacc"], dictt["epochs"], dictt["avg_time_per_epoch"], dictt["total_time"], note)
-    print(dictt)
+    note: {}
+    """.format(dictt["model"], dictt["aggr_func"], dictt["seed"], dictt["dataset"], dictt["params"], dictt["testacc"], dictt["trainacc"], dictt["epochs"], dictt["avg_time_per_epoch"], dictt["total_time"], note)
     files = glob.glob(directory + 'results/mailresults.txt')
-    print(dictt)
     if send_accs == True:
         files.append('accs.mat')
     send_mail(send_to, sub, msg, files, 'gnns-wagg')
-    print(dictt)
-
-note = "testing"
-dire = '/out/GatedTest/'
-#f = open(dir+'results/mailresults.txt')
-#/content/GNN-wAGG/results/mailresults.txt
-send_to = "andreascstrom@gmail.com"
-mail_GNNs(send_to, dire, note, 'gnns-wagg')
