@@ -68,4 +68,36 @@ def mail_GNNs(send_to, directory, note, password='', send_accs=False):
     files = glob.glob(directory + 'results/mailresults.txt')
     if send_accs == True:
         files.append('accs.mat')
-    send_mail(send_to, sub, msg, files, 'gnns-wagg')
+    #send_mail(send_to, sub, msg, files, 'gnns-wagg')
+    username = 'mortssaerdna2@gmail.com'
+    server = 'smtp.gmail.com'
+    port = 587
+    msg = MIMEMultipart()
+    msg['From'] = username
+    msg['To'] = COMMASPACE.join(send_to)
+    msg['Date'] = formatdate(localtime=True)
+    msg['Subject'] = subject
+
+    msg.attach(MIMEText(message))
+    print("yes")
+    for path in files:
+        part = MIMEBase('application', "octet-stream")
+        with open(path, 'rb') as file:
+            part.set_payload(file.read())
+        encoders.encode_base64(part)
+        part.add_header('Content-Disposition',
+                        'attachment; filename="{}"'.format(Path(path).name))
+        msg.attach(part)
+
+    smtp = smtplib.SMTP(server, port)
+    smtp.starttls()
+    smtp.login(username, password)
+    smtp.sendmail(username, send_to, msg.as_string())
+    smtp.quit()
+
+note = "testing"
+dir_ = './out/GatedTest/'
+#f = open(dir+'results/mailresults.txt')
+#/content/GNN-wAGG/results/mailresults.txt
+send_to = "andreascstrom@gmail.com"
+mail_GNNs(send_to, dir_, note, 'gnns-wagg')
