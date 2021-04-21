@@ -69,10 +69,3 @@ def mail_GNNs(send_to, directory, note, password='', send_accs=False):
     if send_accs == True:
         files.append('accs.mat')
     send_mail(send_to, sub, msg, files, 'gnns-wagg')
-
-note = "testing"
-dire = '/out/GatedTest/'
-#f = open(dir+'results/mailresults.txt')
-#/content/GNN-wAGG/results/mailresults.txt
-send_to = "andreascstrom@gmail.com"
-mail_GNNs(send_to, dire, note, 'gnns-wagg')
