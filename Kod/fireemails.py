@@ -69,4 +69,4 @@ def mail_GNNs(send_to, directory, note, password=''):
 
     files = glob.glob(directory + 'results/mailresults.txt')
     files.append('accs.mat')
-    send_mail(reciever, sub, msg, files, 'gnns-wagg')
+    send_mail(send_to, sub, msg, files, 'gnns-wagg')
