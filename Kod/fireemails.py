@@ -61,7 +61,7 @@ def mail_GNNs(send_to, directory, note, password='', send_accs=False):
     train_acc: {:.4f}
     epochs: {}
     avg_time_per_epoch (s): {:.4f}
-    total_time (h): {:.4f}
+    total_time (h): {}
     note: {}
     """.format(dictt["model"], dictt["aggr_func"], dictt["seed"], dictt["dataset"], dictt["params"], dictt["testacc"], dictt["trainacc"], dictt["epochs"], dictt["avg_time_per_epoch"], dictt["total_time"], note)
     files = []
