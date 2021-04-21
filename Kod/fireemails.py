@@ -6,6 +6,8 @@ from email.mime.text import MIMEText
 from email.utils import COMMASPACE, formatdate
 from email import encoders
 import glob
+import os 
+
 
 def send_mail(send_to, subject, message, files=[], password=''):
     """Compose and send email with provided info and attachments.
@@ -43,6 +45,8 @@ def send_mail(send_to, subject, message, files=[], password=''):
     smtp.quit()
   
 def mail_GNNs(send_to, directory, note, password=''):
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    print(dir_path)
     f = open(directory + 'results/mailresults.txt', "r")
     res = []
     keys = []
