@@ -55,8 +55,8 @@ class GIN_MOD_Layer(nn.Module):
         elif aggr_type == 'planar_sig':
             print("planar_sig")
             self._reducer = self.reduce_sig
-            self.w = nn.Parameter(torch.rand(in_dim)-1/2)
-            self.b = nn.Parameter(torch.rand(in_dim)*1-10.5)
+            self.w = nn.Parameter(torch.rand(in_dim)-3)
+            self.b = nn.Parameter(torch.rand(in_dim)*1-8.5)
         else:
             raise KeyError('Aggregator type {} not recognized.'.format(aggr_type))
 
@@ -91,7 +91,7 @@ class GIN_MOD_Layer(nn.Module):
         fsum = torch.sum(torch.sigmoid(w*msg+self.b), dim=1)
         print("max: ", torch.max(fsum))
         print("min: ", torch.min(fsum))
-        sig_in = torch.clamp(fsum/torch.max(fsum), 0.000001, 0.9999999)
+        sig_in = torch.clamp(fsum, 0.000001, 0.9999999)
         out_h = (torch.log(sig_in/(1-sig_in))-self.b)/w
         return {'neigh': out_h}
 
