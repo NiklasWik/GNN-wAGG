@@ -87,7 +87,7 @@ class GIN_MOD_Layer(nn.Module):
 
     def reduce_sig(self, nodes):
         w = torch.exp(self.w)
-        msg = torch.abs(nodes.mailbox['m'])
+        msg = nodes.mailbox['m']
         fsum = torch.sum(torch.sigmoid(w*msg+self.b), dim=1)
         print("max: ", torch.max(fsum))
         print("min: ", torch.min(fsum))
