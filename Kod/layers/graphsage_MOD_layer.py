@@ -49,6 +49,7 @@ class GraphSageLayer(nn.Module):
         else:
             self.aggregator = MeanAggregator()
             print("DU KÖR MED MEAN??? DET HÄR FUNKAR INTE")
+            #gotta love it
         
         
         if self.batch_norm:

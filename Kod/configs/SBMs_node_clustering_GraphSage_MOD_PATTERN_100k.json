@@ -4,7 +4,7 @@
         "id": 0
     },
     
-    "model": "GraphSageMOD",
+    "model": "GraphSage_MOD",
     "dataset": "SBM_PATTERN",
     
     "out_dir": "out/GraphSage_MOD/",

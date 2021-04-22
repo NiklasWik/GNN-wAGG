@@ -21,7 +21,7 @@ from nets.SBMs_node_classification.gat_MOD_net import GAT_mod_Net
 def GAT_MOD(net_params):
     return GAT_mod_Net(net_params)
 
-def Grahpsagemod(net_params):
+def Grahpsage_MOD(net_params):
     return GraphSage_MOD_Net(net_params)
 
 def Gated_MOD(net_params):
@@ -75,7 +75,7 @@ def gnn_model(MODEL_NAME, net_params):
         'MyGNN': MyGNN,
         'GIN_MOD': GIN_MOD,
         'Gated_MOD': Gated_MOD,
-        'GraphSageMOD': Grahpsagemod,
+        'GraphSage_MOD': Grahpsage_MOD,
         'GAT_MOD': GAT_MOD
     }
         

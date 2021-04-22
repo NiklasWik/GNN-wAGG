@@ -4,7 +4,7 @@
         "id": 0
     },
     
-    "model": "GraphSageMOD",
+    "model": "GraphSage_MOD",
     "dataset": "SBM_CLUSTER",
     
     "out_dir": "out/SBMs_node_classification/",
