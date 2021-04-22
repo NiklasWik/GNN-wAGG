@@ -48,7 +48,7 @@ def mail_GNNs(send_to, directory, note, password='', send_accs=False):
     dir_path = os.path.dirname(os.path.realpath(__file__))
     path = dir_path+'/'+directory+'results/mailresults.txt'
     print(path)
-    f = open(''+dir_path+ '/' + directory + 'results/mailresults.txt', "r")
+    f = open(path, "r")
     res = []
     keys = []
     for x in f:
@@ -67,7 +67,7 @@ def mail_GNNs(send_to, directory, note, password='', send_accs=False):
     note: {}
     """.format(dictt["model"], dictt["aggr_func"], dictt["seed"], dictt["dataset"], dictt["params"], dictt["testacc"], dictt["trainacc"], dictt["epochs"], dictt["avg_time_per_epoch"], dictt["total_time"], note)
     files = []
-    files.append(dir_path + '/' + directory + 'results/mailresults.txt')
+    files.append(path)
     if send_accs == True:
         files.append('accs.mat')
     send_mail(send_to, sub, msg, files, 'gnns-wagg')
