@@ -90,11 +90,12 @@ class CustomGATHeadLayer(nn.Module):
             self.w = nn.Parameter(torch.rand(out_dim)-1/2)
             self.b = nn.Parameter((torch.rand(out_dim)-1/2)-6)
         elif neighbor_aggr == "planar_leaky":
-            raise NotImplementedError('Planar with LeakyReLU not implemented in layer.')
+            raise NotImplementedError(' LeakyReLU not implemented in layer.')
             #self._reduce = self.reduce_planar_leaky
-        else:
-            print("None of the proposed aggregation funcs used. use arg --neighbor_agg")
+        elif neighbor_aggr == "original":
             self._reduce = self.reduce_func
+        else:
+            raise KeyError('Aggregator type {} not recognized.'.format(aggr_type))
 
 
     def edge_attention(self, edges):

@@ -1,0 +1,6 @@
+GAT_mod:
+
+--neighbor_aggr
+	pnorm
+	planar_sig
+	original

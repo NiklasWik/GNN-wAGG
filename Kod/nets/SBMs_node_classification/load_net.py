@@ -18,10 +18,10 @@ from nets.SBMs_node_classification.gated_test_net import GatedTestNet
 from nets.SBMs_node_classification.graphsage_MOD_net import GraphSage_MOD_Net
 from nets.SBMs_node_classification.gat_MOD_net import GAT_mod_Net
 
-def GATmod(net_params):
+def GAT_mod(net_params):
     return GAT_mod_Net(net_params)
 
-def Grahpsagemod(net_params):
+def GrahpSagemod(net_params):
     return GraphSage_MOD_Net(net_params)
 
 def GatedTest(net_params):
