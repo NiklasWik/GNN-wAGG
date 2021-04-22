@@ -71,7 +71,7 @@ def train_epoch_sparse(model, optimizer, device, data_loader, epoch):
         loss.backward()
         optimizer.step()
 
-        #torch.cuda.empty_cache()
+        torch.cuda.empty_cache()
 
         epoch_loss += loss.detach().item()
         epoch_train_acc += accuracy(batch_scores, batch_labels)
