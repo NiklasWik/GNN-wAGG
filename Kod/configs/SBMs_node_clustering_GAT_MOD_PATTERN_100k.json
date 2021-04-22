@@ -4,10 +4,10 @@
         "id": 0
     },
     
-    "model": "GAT_mod",
+    "model": "GAT_MOD",
     "dataset": "SBM_PATTERN",
 
-    "out_dir": "out/GAT_mod/",
+    "out_dir": "out/GAT_MOD/",
     
     "params": {
         "seed": 41,
