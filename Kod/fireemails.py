@@ -47,7 +47,6 @@ def send_mail(send_to, subject, message, files=[], password=''):
 def mail_GNNs(send_to, directory, note, password='', send_accs=False, send_all=False):
     dir_path = os.path.dirname(os.path.realpath(__file__))
     path = dir_path+'/'+directory+'results/mailresults.txt'
-    print(path)
     f = open(path, "r")
     res = []
     keys = []
