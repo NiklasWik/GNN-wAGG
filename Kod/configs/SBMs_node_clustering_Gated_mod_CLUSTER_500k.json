@@ -33,6 +33,7 @@
         "in_feat_dropout": 0.0,
         "dropout": 0.0,
         "batch_norm": true,
-        "pos_enc": false
+        "pos_enc": false,
+        "pos_enc_dim": 2
     }
 }
