@@ -4,7 +4,7 @@
         "id": 0
     },
     
-    "model": "GINmod",
+    "model": "GIN_MOD",
     "dataset": "SBM_PATTERN",
     
     "out_dir": "out/GIN_MOD/",

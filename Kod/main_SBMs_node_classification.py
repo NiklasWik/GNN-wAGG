@@ -105,7 +105,7 @@ def train_val_pipeline(MODEL_NAME, dataset, params, net_params, dirs):
             dataset._add_positional_encodings(net_params['pos_enc_dim'])
             print('Time PE:',time.time()-start0)
 
-    if MODEL_NAME in ['Gated_MOD', 'GINmod', 'GraphSageMOD', 'GAT_mod']:
+    if MODEL_NAME in ['Gated_MOD', 'GIN_MOD', 'GraphSageMOD', 'GAT_mod']:
         print('Seed: ', params['seed'])
         print('Aggregation function: ', net_params['neighbor_aggr'])
     
