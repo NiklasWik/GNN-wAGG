@@ -72,7 +72,7 @@ def mail_GNNs(send_to, directory, note, password='', send_accs=False, send_all=F
         All files from out/{}/results appended
         note: {}
         """.format(dictt["model"], note)
-        sub = "SUMMARY"+dictt["model"]+", "+dictt["aggr_func"]+", "+dictt["dataset"]+", "+dictt["date"]
+        sub = "SUMMARY: "+dictt["model"]+", "+dictt["aggr_func"]+", "+dictt["dataset"]+", "+dictt["date"]
         files = glob.glob(dir_path+'/'+directory+'results/*.txt')
     else:
         files = []
