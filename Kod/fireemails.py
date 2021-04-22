@@ -68,6 +68,11 @@ def mail_GNNs(send_to, directory, note, password='', send_accs=False, send_all=F
     """.format(dictt["model"], dictt["aggr_func"], dictt["seed"], dictt["dataset"], dictt["params"], dictt["testacc"], dictt["trainacc"], dictt["epochs"], dictt["avg_time_per_epoch"], dictt["total_time"], note)
     
     if send_all == True:
+        msg = """
+        All files from out/{}/results appended
+        note: {}
+        """.format(dictt["model"], note)
+        sub = "SUMMARY"+dictt["model"]+", "+dictt["aggr_func"]+", "+dictt["dataset"]+", "+dictt["date"]
         files = glob.glob(dir_path+'/'+directory+'results/*.txt')
     else:
         files = []
