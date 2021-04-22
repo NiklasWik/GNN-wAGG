@@ -24,7 +24,7 @@ def GAT_mod(net_params):
 def Grahpsagemod(net_params):
     return GraphSage_MOD_Net(net_params)
 
-def Gated_mod(net_params):
+def Gated_MOD(net_params):
     return GatedTestNet(net_params)
 
 def GINmod(net_params):
@@ -74,7 +74,7 @@ def gnn_model(MODEL_NAME, net_params):
         '3WLGNN': ThreeWLGNN,
         'MyGNN': MyGNN,
         'GINmod': GINmod,
-        'Gated_mod': Gated_mod,
+        'Gated_MOD': Gated_MOD,
         'GraphSageMOD': Grahpsagemod,
         'GAT_mod': GAT_mod
     }

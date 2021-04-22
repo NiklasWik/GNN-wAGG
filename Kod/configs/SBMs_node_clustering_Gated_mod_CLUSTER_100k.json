@@ -4,10 +4,10 @@
         "id": 0
     },
     
-    "model": "Gated_mod",
+    "model": "Gated_MOD",
     "dataset": "SBM_CLUSTER",
     
-    "out_dir": "out/Gated_mod/",
+    "out_dir": "out/Gated_MOD/",
     
     "params": {
         "seed": 41,

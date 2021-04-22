@@ -99,13 +99,13 @@ def train_val_pipeline(MODEL_NAME, dataset, params, net_params, dirs):
             print("[!] Adding graph self-loops for GCN/GAT models (central node trick).")
             dataset._add_self_loops()
     
-    if MODEL_NAME in ['GatedGCN', 'Gated_mod']:
+    if MODEL_NAME in ['GatedGCN', 'Gated_MOD']:
         if net_params['pos_enc']:
             print("[!] Adding graph positional encoding.")
             dataset._add_positional_encodings(net_params['pos_enc_dim'])
             print('Time PE:',time.time()-start0)
 
-    if MODEL_NAME in ['Gated_mod', 'GINmod', 'GraphSageMOD', 'GAT_mod']:
+    if MODEL_NAME in ['Gated_MOD', 'GINmod', 'GraphSageMOD', 'GAT_mod']:
         print('Seed: ', params['seed'])
         print('Aggregation function: ', net_params['neighbor_aggr'])
     
