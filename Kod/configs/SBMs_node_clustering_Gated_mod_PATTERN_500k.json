@@ -4,15 +4,15 @@
         "id": 0
     },
     
-    "model": "GatedTest",
+    "model": "Gated_mod",
     "dataset": "SBM_PATTERN",
     
-    "out_dir": "out/GatedTest/",
+    "out_dir": "out/Gated_mod/",
     
     "params": {
         "seed": 41,
         "epochs": 1000,
-        "batch_size": 128,
+        "batch_size": 32,
         "init_lr": 0.001,
         "lr_reduce_factor": 0.5,
         "lr_schedule_patience": 5,
@@ -23,11 +23,11 @@
     },
     
     "net_params": {
-        "L": 4,
-        "hidden_dim": 70,
-        "out_dim": 70,
+        "L": 16,
+        "hidden_dim": 78,
+        "out_dim": 78,
         "residual": true,
-        "neighbor_aggr": "sumadasf",
+        "neighbor_aggr": "pnorm",
         "edge_feat": false,
         "readout": "mean",
         "in_feat_dropout": 0.0,
