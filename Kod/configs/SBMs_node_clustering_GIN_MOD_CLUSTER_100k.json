@@ -5,12 +5,12 @@
     },
     
     "model": "GINmod",
-    "dataset": "SBM_PATTERN",
+    "dataset": "SBM_CLUSTER",
     
-    "out_dir": "out/GINmod/",
+    "out_dir": "out/GIN_MOD/",
     
     "params": {
-        "seed": 41,
+        "seed": 95,
         "epochs": 1000,
         "batch_size": 128,
         "init_lr": 0.001,
