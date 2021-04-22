@@ -68,7 +68,7 @@ class GraphSageLayer(nn.Module):
 
     def reduce_planar(self, nodes):
         w = torch.exp(self.w)
-        msg = torch.abs(nodes.mailbox['m'])
+        msg = nodes.mailbox['m']
         fsum = torch.sum(torch.sigmoid(w*msg+self.b), dim=1)
         #sig_in = torch.clamp(fsum/torch.max(fsum), 0.000001, 0.9999999)
         sig_in = torch.clamp(fsum, 0.000001, 0.9999999)
