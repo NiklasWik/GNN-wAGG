@@ -74,13 +74,13 @@ def mail_GNNs(send_to, directory, note, password='', send_all=False, seed=None, 
         note: {}
         """.format(dictt["model"], note)
         sub = "SUMMARY: "+dictt["model"]+", "+dictt["aggr_func"]+", "+dictt["dataset"]+", "+dictt["date"]
-        files = glob.glob(path2 + 'mailresults*.txt')
+        files = glob.glob(path2 + 'res*.txt')
     else:
         files = []
         files.append(path)
 
     if seed is not None:
-        copyfile(path, path2 + 'mailresults' + str(seed) + '.txt')
+        copyfile(path, path2 + 'res' + str(seed) + '.txt')
 
     if send_accs == True:
         files.append('accs.mat')
