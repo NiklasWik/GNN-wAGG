@@ -74,7 +74,7 @@ def mail_GNNs(send_to, directory, note, password='', send_accs=False, send_all=F
         note: {}
         """.format(dictt["model"], note)
         sub = "SUMMARY: "+dictt["model"]+", "+dictt["aggr_func"]+", "+dictt["dataset"]+", "+dictt["date"]
-        files = glob.glob(path2 + '*.txt')
+        files = glob.glob(path2 + 'mailresults*.txt')
     else:
         files = []
         files.append(path)
