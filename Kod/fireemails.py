@@ -7,6 +7,7 @@ from email.utils import COMMASPACE, formatdate
 from email import encoders
 import glob
 import os 
+from shutil import copyfile
 
 
 def send_mail(send_to, subject, message, files=[], password=''):
@@ -44,9 +45,10 @@ def send_mail(send_to, subject, message, files=[], password=''):
     smtp.sendmail(username, send_to, msg.as_string())
     smtp.quit()
   
-def mail_GNNs(send_to, directory, note, password='', send_accs=False, send_all=False):
+def mail_GNNs(send_to, directory, note, password='', send_accs=False, send_all=False, seed=None):
     dir_path = os.path.dirname(os.path.realpath(__file__))
     path = dir_path+'/'+directory+'results/mailresults.txt'
+    path2 = dir_path+'/'+directory+'results/'
     f = open(path, "r")
     res = []
     keys = []
@@ -72,10 +74,13 @@ def mail_GNNs(send_to, directory, note, password='', send_accs=False, send_all=F
         note: {}
         """.format(dictt["model"], note)
         sub = "SUMMARY: "+dictt["model"]+", "+dictt["aggr_func"]+", "+dictt["dataset"]+", "+dictt["date"]
-        files = glob.glob(dir_path+'/'+directory+'results/*.txt')
+        files = glob.glob(path2 + '*.txt')
     else:
         files = []
         files.append(path)
+
+    if seed is not None:
+        copyfile(path, path2 + 'mailresults' + str(seed) + '.txt')
 
     if send_accs == True:
         files.append('accs.mat')
