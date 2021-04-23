@@ -45,7 +45,7 @@ def send_mail(send_to, subject, message, files=[], password=''):
     smtp.sendmail(username, send_to, msg.as_string())
     smtp.quit()
   
-def mail_GNNs(send_to, directory, note, password='', send_accs=False, send_all=False, seed=None):
+def mail_GNNs(send_to, directory, note, password='', send_all=False, seed=None, send_accs=False):
     dir_path = os.path.dirname(os.path.realpath(__file__))
     path = dir_path+'/'+directory+'results/mailresults.txt'
     path2 = dir_path+'/'+directory+'results/'
