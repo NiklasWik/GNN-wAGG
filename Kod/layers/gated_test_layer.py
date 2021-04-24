@@ -27,8 +27,8 @@ class GatedTestLayer(nn.Module):
             self.P = nn.Parameter(torch.rand(output_dim)*3+1)
         elif aggr_type == "planar_sig":
             self._reducer = self.reduce_fp
-            self.w = nn.Parameter(torch.rand(in_feats)-1)
-            self.b = nn.Parameter((torch.rand(in_feats)*1-6.5))
+            self.w = nn.Parameter(torch.rand(output_dim)-1)
+            self.b = nn.Parameter((torch.rand(output_dim)*1-6.5))
         elif aggr_type == "sum":
             self._reducer = self.reduce_sum
         else:
