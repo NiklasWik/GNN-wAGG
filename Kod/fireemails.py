@@ -86,7 +86,6 @@ def mail_GNNs(send_to, directory, note, password='', send_all=False, seed=None, 
         files.append('accs.mat')
     
     if xlsx:
-        !pip install xlsxwriter
         import xlsxwriter
         get_next_dict = iter([dictt])
         headers = dictt.keys()
