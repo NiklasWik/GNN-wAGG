@@ -89,7 +89,8 @@ def mail_GNNs(send_to, directory, note, password='', send_all=False, seed=None, 
         import xlsxwriter
         get_next_dict = iter([dictt])
         headers = dictt.keys()
-        dictt.values().replace('.',',')
+        for key, value in dictt.items():
+            value.replace('.',',')
         if not os.path.isfile(path2+'tmp.csv'):
             with open(path2+'tmp.csv', 'w')as csv_file:
                 csv_file.writelines(', '.join(headers))
