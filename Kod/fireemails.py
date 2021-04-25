@@ -90,7 +90,7 @@ def mail_GNNs(send_to, directory, note, password='', send_all=False, seed=None, 
         get_next_dict = iter([dictt])
         headers = dictt.keys()
         for key, value in dictt.items():
-            value.replace('.',',')
+            print(value)
         if not os.path.isfile(path2+'tmp.csv'):
             with open(path2+'tmp.csv', 'w')as csv_file:
                 csv_file.writelines(', '.join(headers))
