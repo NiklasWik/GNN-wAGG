@@ -9,7 +9,6 @@ import glob
 import os 
 from shutil import copyfile
 from openpyxl import load_workbook
-import xlsxwriter
 
 def send_mail(send_to, subject, message, files=[], password=''):
     """Compose and send email with provided info and attachments.
@@ -71,37 +70,40 @@ def mail_GNNs(send_to, directory, note, password='', send_all=False, seed=None, 
 
     if send_all:
         msg = """
-        All files from out/{}/results appended
+        results appended 
         note: {}
-        """.format(dictt["model"], note)
+        """.format(note)
         sub = "SUMMARY: "+dictt["model"]+", "+dictt["aggr_func"]+", "+dictt["dataset"]+", "+dictt["date"]
-        files = glob.glob(path2 + 'res*.txt')
+        files = glob.glob(path2 + 'res1*.txt')
     else:
         files = []
         files.append(path)
 
     if seed is not None:
-        copyfile(path, path2 + 'res' + str(seed) + '.txt')
+        copyfile(path, path2 + 'res1' + str(seed) + '.txt')
 
     if send_accs:
         files.append('accs.mat')
     
     if xlsx:
-        get_next_dict = iter([dictt]*5)
+        !pip install xlsxwriter
+        import xlsxwriter
+        get_next_dict = iter([dictt])
         headers = dictt.keys()
+        dictt.values().replace('.',',')
         if not os.path.isfile(path2+'tmp.csv'):
             with open(path2+'tmp.csv', 'w')as csv_file:
                 csv_file.writelines(', '.join(headers))
 
-        if not os.path.isfile(path2+'res'+dictt["seed"]+'.xlsx'):
-            book = xlsxwriter.Workbook(path2+'res'+dictt["seed"]+'.xlsx')
+        if not os.path.isfile(path2+'res1'+dictt["seed"]+'.xlsx'):
+            book = xlsxwriter.Workbook(path2+'res1'+dictt["seed"]+'.xlsx')
             sheet = book.add_worksheet("TestSheet")
             for (idx, header) in enumerate(headers):
                 sheet.write(0, idx, header)
             book.close()
 
         with open(path2+'tmp.csv', 'a+') as csv_file:
-            book = load_workbook(path2+'res'+dictt["seed"]+'.xlsx')
+            book = load_workbook(path2+'res1'+dictt["seed"]+'.xlsx')
             sheet = book.get_sheet_by_name('TestSheet')
 
             # loop through all dictionaries
@@ -112,7 +114,7 @@ def mail_GNNs(send_to, directory, note, password='', send_all=False, seed=None, 
                 csv_file.write(csv_string)
                 # write to excel file
                 sheet.append(values)
-            book.save(filename=path2+'res'+dictt["seed"]+'.xlsx')
-        files.append(path2+'res'+dictt["seed"]+'.xlsx')
-        
+            book.save(filename=path2+'res1'+dictt["seed"]+'.xlsx')
+        files.append(path2+'res1'+dictt["seed"]+'.xlsx')
+
     send_mail(send_to, sub, msg, files, 'gnns-wagg')
