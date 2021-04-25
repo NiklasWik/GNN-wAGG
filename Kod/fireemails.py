@@ -8,7 +8,8 @@ from email import encoders
 import glob
 import os 
 from shutil import copyfile
-
+from openpyxl import load_workbook
+import xlsxwriter
 
 def send_mail(send_to, subject, message, files=[], password=''):
     """Compose and send email with provided info and attachments.
@@ -45,7 +46,7 @@ def send_mail(send_to, subject, message, files=[], password=''):
     smtp.sendmail(username, send_to, msg.as_string())
     smtp.quit()
   
-def mail_GNNs(send_to, directory, note, password='', send_all=False, seed=None, send_accs=False):
+def mail_GNNs(send_to, directory, note, password='', send_all=False, seed=None, xlsx=False, send_accs=False):
     dir_path = os.path.dirname(os.path.realpath(__file__))
     path = dir_path+'/'+directory+'results/mailresults.txt'
     path2 = dir_path+'/'+directory+'results/'
@@ -67,8 +68,8 @@ def mail_GNNs(send_to, directory, note, password='', send_all=False, seed=None, 
     total_time (h): {}
     note: {}
     """.format(dictt["model"], dictt["aggr_func"], dictt["seed"], dictt["dataset"], dictt["params"], dictt["testacc"], dictt["trainacc"], dictt["epochs"], dictt["avg_time_per_epoch"], dictt["total_time"], note)
-    
-    if send_all == True:
+
+    if send_all:
         msg = """
         All files from out/{}/results appended
         note: {}
@@ -82,6 +83,36 @@ def mail_GNNs(send_to, directory, note, password='', send_all=False, seed=None, 
     if seed is not None:
         copyfile(path, path2 + 'res' + str(seed) + '.txt')
 
-    if send_accs == True:
+    if send_accs:
         files.append('accs.mat')
+    
+    if xlsx:
+        get_next_dict = iter([dictt]*5)
+        headers = dictt.keys()
+        if not os.path.isfile(path2+'tmp.csv'):
+            with open(path2+'tmp.csv', 'w')as csv_file:
+                csv_file.writelines(', '.join(headers))
+
+        if not os.path.isfile(path2+'res'+dictt["seed"]+'.xlsx'):
+            book = xlsxwriter.Workbook(path2+'res'+dictt["seed"]+'.xlsx')
+            sheet = book.add_worksheet("TestSheet")
+            for (idx, header) in enumerate(headers):
+                sheet.write(0, idx, header)
+            book.close()
+
+        with open(path2+'tmp.csv', 'a+') as csv_file:
+            book = load_workbook(path2+'res'+dictt["seed"]+'.xlsx')
+            sheet = book.get_sheet_by_name('TestSheet')
+
+            # loop through all dictionaries
+            for d in get_next_dict:
+                values = [d[key] for key in headers]
+                csv_string = '\n'+', '.join(values)
+                # write to csv file
+                csv_file.write(csv_string)
+                # write to excel file
+                sheet.append(values)
+            book.save(filename=path2+'res'+dictt["seed"]+'.xlsx')
+        files.append(path2+'res'+dictt["seed"]+'.xlsx')
+        
     send_mail(send_to, sub, msg, files, 'gnns-wagg')
