@@ -25,6 +25,9 @@ class GatedTestLayer(nn.Module):
         if aggr_type == "pnorm":
             self._reducer = self.reduce_p
             self.P = nn.Parameter(torch.rand(output_dim)*3+1)
+        if aggr_type == "pnorm_robust":
+            self._reducer = self.reduce_p_robust
+            self.P = nn.Parameter(torch.rand(output_dim)*3+1)
         elif aggr_type == "planar_sig":
             self._reducer = self.reduce_sig
             self.w = nn.Parameter(torch.rand(output_dim)-1)
@@ -94,15 +97,19 @@ class GatedTestLayer(nn.Module):
     def reduce_p(self,nodes):
         p = torch.clamp(self.P,1,100)
         h = torch.abs(nodes.mailbox['m'])
-        #print(torch.max(h))
-        
-        #h = torch.exp(nodes.mailbox['m'])
         alpha = torch.max(h)
         eps = 1e-4
         h = torch.pow(h/alpha + eps, p)
         
         return {'sum_sigma_h': torch.pow(torch.sum(h, dim=1) + eps , 1/p) * alpha}
 
+    def reduce_p(self,nodes):
+        p = torch.clamp(self.P,1,100)
+        h = torch.abs(nodes.mailbox['m'])
+        eps = 1e-4
+        h = torch.pow(h + eps, p)
+        
+        return {'sum_sigma_h': torch.pow(torch.sum(h, dim=1) + eps , 1/p)}
     def forward(self, g, h, e):
         
         h_in = h # for residual connection
