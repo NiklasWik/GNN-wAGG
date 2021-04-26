@@ -71,7 +71,7 @@ class GatedTestLayer(nn.Module):
 
     def reduce_relu(self, nodes):
         w = torch.exp(self.w)
-        R = torch.clamp(self.R, 0.00001, 0.999999)
+        R = torch.clamp(self.R, 0.000001, 0.999999)
         msg = w * nodes.mailbox['m'] + self.b
         fsum = torch.sum(torch.maximum(msg, R * msg), dim=1)
         out_h = (torch.minimum(fsum, fsum / R) - self.b) / w
@@ -92,7 +92,7 @@ class GatedTestLayer(nn.Module):
         out_h = (torch.atanh(fsum) - self.b) / w
         return {'sum_sigma_h': out_h}
 
-    def reduce_p(self,nodes):
+    def reduce_p_robust(self,nodes):
         p = torch.clamp(self.P,1,100)
         h = torch.abs(nodes.mailbox['m'])
         alpha = torch.max(h)
