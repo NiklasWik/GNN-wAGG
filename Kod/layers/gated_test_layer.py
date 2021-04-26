@@ -26,20 +26,18 @@ class GatedTestLayer(nn.Module):
             self._reducer = self.reduce_p
             self.P = nn.Parameter(torch.rand(output_dim)*3+1)
         elif aggr_type == "planar_sig":
-            self._reducer = self.reduce_fp
+            self._reducer = self.reduce_sig
             self.w = nn.Parameter(torch.rand(output_dim)-1)
             self.b = nn.Parameter((torch.rand(output_dim)*1-6.5))
         elif aggr_type == "planar_tanh":
-            print("planar_tanh")
-            self._reducer = self.reduce_fp_tanh
+            self._reducer = self.reduce_tanh
             self.w = nn.Parameter(torch.rand(output_dim)-10)
             self.b = nn.Parameter((torch.rand(output_dim)*0.01-0.01/2))
         elif aggr_type == "planar_relu":
-            print("planar_relu")
-            self._reducer = self.reduce_fp_relu
+            self._reducer = self.reduce_relu
             self.w = nn.Parameter(torch.rand(output_dim)*1)
             self.b = nn.Parameter((torch.rand(output_dim)*1-3))
-            self.R = nn.Parameter((torch.rand(output_dim)*0.1)+0.2)
+            self.R = nn.Parameter((torch.rand(1)*0.1)+0.2)
         elif aggr_type == "sum":
             self._reducer = self.reduce_sum
         else:
@@ -60,7 +58,7 @@ class GatedTestLayer(nn.Module):
         print(torch.max(nodes.mailbox['m']))
         return {'sum_sigma_h': torch.sum(nodes.mailbox['m'], dim=1)}
 
-    def reduce_fp(self, nodes):
+    def reduce_sig(self, nodes):
         w = torch.exp(self.w)
         msg = nodes.mailbox['m']
         fsum = torch.sum(torch.sigmoid(w*msg+self.b), dim=1)
@@ -68,7 +66,7 @@ class GatedTestLayer(nn.Module):
         out_h = (torch.log(sig_in/(1-sig_in))-self.b)/w
         return {'sum_sigma_h': out_h}
 
-    def reduce_fp_relu(self, nodes):
+    def reduce_relu(self, nodes):
         w = torch.exp(self.w)
         R = torch.clamp(self.R, 0.001, 1)
         msg = w * nodes.mailbox['m'] + self.b
@@ -78,7 +76,7 @@ class GatedTestLayer(nn.Module):
         out_h = (torch.minimum(fsum, fsum / R) - self.b) / w
         return {'sum_sigma_h': out_h}
 
-    def reduce_fp_tanh(self, nodes):
+    def reduce_tanh(self, nodes):
         w = torch.exp(self.w)
         msg = w * nodes.mailbox['m'] + self.b
 
