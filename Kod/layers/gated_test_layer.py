@@ -29,6 +29,11 @@ class GatedTestLayer(nn.Module):
             self._reducer = self.reduce_fp
             self.w = nn.Parameter(torch.rand(output_dim)-1)
             self.b = nn.Parameter((torch.rand(output_dim)*1-6.5))
+        elif aggr_type == "planar_relu":
+            self._reducer = self.reduce_fp_relu
+            self.w = nn.Parameter(torch.rand(output_dim)-1)
+            self.b = nn.Parameter((torch.rand(output_dim)*1-6.5))
+            self.R = nn.Parameter((torch.rand(output_dim)*0.1)+0.2)
         elif aggr_type == "sum":
             self._reducer = self.reduce_sum
         else:
@@ -51,11 +56,18 @@ class GatedTestLayer(nn.Module):
 
     def reduce_fp(self, nodes):
         w = torch.exp(self.w)
-        msg = torch.abs(nodes.mailbox['m'])
+        msg = nodes.mailbox['m']
         fsum = torch.sum(torch.sigmoid(w*msg+self.b), dim=1)
-        #sig_in = torch.clamp(fsum/torch.max(fsum), 0.000001, 0.9999999)
         sig_in = torch.clamp(fsum, 0.000001, 0.9999999)
         out_h = (torch.log(sig_in/(1-sig_in))-self.b)/w
+        return {'sum_sigma_h': out_h}
+
+    def reduce_fp_relu(self, nodes):
+        w = torch.exp(self.w)
+        R = torch.clamp(self.R, 0.001, 1)
+        msg = w * nodes.mailbox['m'] + self.b
+        fsum = torch.sum(torch.maximum(msg, R * msg), dim=1)
+        out_h = (torch.minimum(fsum, fsum / R) - self.b) / w
         return {'sum_sigma_h': out_h}
 
     def reduce_p(self,nodes):
