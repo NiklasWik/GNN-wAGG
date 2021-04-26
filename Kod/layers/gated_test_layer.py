@@ -81,6 +81,8 @@ class GatedTestLayer(nn.Module):
         w = torch.exp(self.w)
         msg = w * nodes.mailbox['m'] + self.b
         fsum = torch.clamp(torch.sum(torch.tanh(msg), dim=1), -0.99, 0.99)
+        print("max: " torch.max(fsum))
+        print("min: " torch.min(fsum))
         out_h = (torch.atanh(fsum) - self.b) / w
         return {'sum_sigma_h': out_h}
 
