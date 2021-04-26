@@ -80,7 +80,7 @@ class GatedTestLayer(nn.Module):
     def reduce_fp_tanh(self, nodes):
         w = torch.exp(self.w)
         msg = w * nodes.mailbox['m'] + self.b
-        fsum = torch.sum(torch.tanh(msg), dim=1)
+        fsum = torch.clamp(torch.sum(torch.tanh(msg), dim=1), -0.99, 0.99)
         out_h = (torch.atanh(fsum) - self.b) / w
         return {'sum_sigma_h': out_h}
 
