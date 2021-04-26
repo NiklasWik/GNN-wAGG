@@ -30,8 +30,9 @@ class GatedTestLayer(nn.Module):
             self.w = nn.Parameter(torch.rand(output_dim)-1)
             self.b = nn.Parameter((torch.rand(output_dim)*1-6.5))
         elif aggr_type == "planar_tanh":
+            print("planar_tanh")
             self._reducer = self.reduce_fp_tanh
-            self.w = nn.Parameter(torch.rand(output_dim)-5)
+            self.w = nn.Parameter(torch.rand(output_dim)-10)
             self.b = nn.Parameter((torch.rand(output_dim)*0.1-0.1/2))
         elif aggr_type == "planar_relu":
             print("planar_relu")
@@ -80,10 +81,12 @@ class GatedTestLayer(nn.Module):
     def reduce_fp_tanh(self, nodes):
         w = torch.exp(self.w)
         msg = w * nodes.mailbox['m'] + self.b
-        print("max: ", torch.max(msg))
-        print("min: ", torch.min(msg))
+        
         fsum = torch.clamp(torch.sum(torch.tanh(msg), dim=1), -0.99, 0.99)
         
+        print("max: ", torch.max(fsum))
+        print("min: ", torch.min(fsum))
+
         out_h = (torch.atanh(fsum) - self.b) / w
         return {'sum_sigma_h': out_h}
 
