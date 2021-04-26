@@ -31,7 +31,7 @@ class GatedTestLayer(nn.Module):
             self.b = nn.Parameter((torch.rand(output_dim)*1-6.5))
         elif aggr_type == "planar_tanh":
             self._reducer = self.reduce_fp_tanh
-            self.w = nn.Parameter(torch.rand(output_dim)-5/2)
+            self.w = nn.Parameter(torch.rand(output_dim)-5)
             self.b = nn.Parameter((torch.rand(output_dim)*0.1-0.1/2))
         elif aggr_type == "planar_relu":
             print("planar_relu")
