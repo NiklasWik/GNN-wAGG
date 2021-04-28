@@ -108,8 +108,8 @@ class GIN_MOD_Layer(nn.Module):
         
         fsum = torch.clamp(torch.sum(torch.tanh(msg), dim=1), -0.99, 0.99)
         
-        print("max: ", torch.max(fsum))
-        print("min: ", torch.min(fsum))
+        """ print("max: ", torch.max(fsum))
+        print("min: ", torch.min(fsum)) """
 
         out_h = (torch.atanh(fsum) - self.b) / w
         return {'neigh': out_h}
