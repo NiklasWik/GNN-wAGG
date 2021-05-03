@@ -89,8 +89,8 @@ class GraphSageLayer(nn.Module):
         
         fsum = torch.clamp(torch.sum(torch.tanh(msg), dim=1), -0.9999999, 0.9999999)
         
-        print("max: ", torch.max(fsum))
-        print("min: ", torch.min(fsum))
+        """ print("max: ", torch.max(fsum))
+        print("min: ", torch.min(fsum)) """
 
         out_h = (torch.atanh(fsum) - self.b) / w
         return {'c': out_h}
