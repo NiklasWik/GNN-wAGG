@@ -59,7 +59,7 @@ class GIN_MOD_Layer(nn.Module):
             self.b = nn.Parameter(torch.rand(in_dim)*1-8.5)
         elif aggr_type == "planar_tanh":
             self._reducer = self.reduce_tanh
-            self.w = nn.Parameter(torch.rand(in_dim)-10)
+            self.w = nn.Parameter(torch.rand(in_dim)-5)
             self.b = nn.Parameter((torch.rand(in_dim)*0.01-0.01/2))
         else:
             raise KeyError('Aggregator type {} not recognized.'.format(aggr_type))
