@@ -46,7 +46,7 @@ class GraphSageLayer(nn.Module):
             self._reducer = self.reduce_planar
             self.w = nn.Parameter(torch.rand(in_feats)-1)
             self.b = nn.Parameter((torch.rand(in_feats)*1-6.5))
-        elif aggr_type == "planar_tanh":
+        elif aggregator_type == "planar_tanh":
             self._reducer = self.reduce_tanh
             self.w = nn.Parameter(torch.rand(in_feats)-5)
             self.b = nn.Parameter((torch.rand(in_feats)*0.01-0.01))
