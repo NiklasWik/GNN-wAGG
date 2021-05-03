@@ -46,6 +46,10 @@ class GraphSageLayer(nn.Module):
             self._reducer = self.reduce_planar
             self.w = nn.Parameter(torch.rand(in_feats)-1)
             self.b = nn.Parameter((torch.rand(in_feats)*1-6.5))
+        elif aggr_type == "planar_tanh":
+            self._reducer = self.reduce_tanh
+            self.w = nn.Parameter(torch.rand(in_feats)-5)
+            self.b = nn.Parameter((torch.rand(in_feats)*0.01-0.01))
         else:
             self.aggregator = MeanAggregator()
             print("DU KÖR MED MEAN??? DET HÄR FUNKAR INTE")
@@ -76,6 +80,20 @@ class GraphSageLayer(nn.Module):
         out_h = (torch.log(sig_in/(1-sig_in))-self.b)/w
         return {'c': out_h}
 
+    def reduce_tanh(self, nodes):
+        w = torch.exp(self.w)
+        msg = w * nodes.mailbox['m'] + self.b
+
+        """ print("MSG max: ", torch.max(msg))
+        print("MSG min: ", torch.min(msg)) """
+        
+        fsum = torch.clamp(torch.sum(torch.tanh(msg), dim=1), -0.99999999, 0.99999999)
+        
+        print("max: ", torch.max(fsum))
+        print("min: ", torch.min(fsum))
+
+        out_h = (torch.atanh(fsum) - self.b) / w
+        return {'c': out_h}
 
     def forward(self, g, h):
         h_in = h              # for residual connection
