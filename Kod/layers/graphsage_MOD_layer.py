@@ -48,7 +48,7 @@ class GraphSageLayer(nn.Module):
             self.b = nn.Parameter((torch.rand(in_feats)*1-6.5))
         elif aggregator_type == "planar_tanh":
             self._reducer = self.reduce_tanh
-            self.w = nn.Parameter(torch.rand(in_feats)-5)
+            self.w = nn.Parameter(torch.rand(in_feats)-6)
             self.b = nn.Parameter((torch.rand(in_feats)*0.01-0.01))
         else:
             self.aggregator = MeanAggregator()
@@ -87,7 +87,7 @@ class GraphSageLayer(nn.Module):
         """ print("MSG max: ", torch.max(msg))
         print("MSG min: ", torch.min(msg)) """
         
-        fsum = torch.clamp(torch.sum(torch.tanh(msg), dim=1), -0.99999999, 0.99999999)
+        fsum = torch.clamp(torch.sum(torch.tanh(msg), dim=1), -0.9999999, 0.9999999)
         
         print("max: ", torch.max(fsum))
         print("min: ", torch.min(fsum))
