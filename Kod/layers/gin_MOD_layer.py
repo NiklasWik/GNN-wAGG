@@ -59,7 +59,7 @@ class GIN_MOD_Layer(nn.Module):
             self.b = nn.Parameter(torch.rand(in_dim)*1-8.5)
         elif aggr_type == "planar_tanh":
             self._reducer = self.reduce_tanh
-            self.w = nn.Parameter(torch.rand(in_dim)-5)
+            self.w = nn.Parameter(torch.rand(in_dim)-6)
             self.b = nn.Parameter((torch.rand(in_dim)*0.01-0.01/2))
         else:
             raise KeyError('Aggregator type {} not recognized.'.format(aggr_type))
@@ -108,8 +108,8 @@ class GIN_MOD_Layer(nn.Module):
         
         fsum = torch.clamp(torch.sum(torch.tanh(msg), dim=1), -0.99, 0.99)
         
-        """ print("max: ", torch.max(fsum))
-        print("min: ", torch.min(fsum)) """
+        print("max: ", torch.max(fsum))
+        print("min: ", torch.min(fsum))
 
         out_h = (torch.atanh(fsum) - self.b) / w
         return {'neigh': out_h}
