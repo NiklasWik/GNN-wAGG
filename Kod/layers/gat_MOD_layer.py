@@ -89,6 +89,10 @@ class CustomGATHeadLayer(nn.Module):
             self._reduce = self.reduce_planar_sigmoid
             self.w = nn.Parameter(torch.rand(out_dim)-1/2)
             self.b = nn.Parameter((torch.rand(out_dim)-1/2)-6)
+        elif neighbor_aggr == "planar_tanh":
+            self._reduce = self.reduce_tanh
+            self.w = nn.Parameter(torch.rand(out_dim)-4.5)
+            self.b = nn.Parameter((torch.rand(out_dim)*0.01-0.01))
         elif neighbor_aggr == "planar_leaky":
             raise NotImplementedError(' LeakyReLU not implemented in layer.')
             #self._reduce = self.reduce_planar_leaky
@@ -113,14 +117,35 @@ class CustomGATHeadLayer(nn.Module):
         return {'h': h}
 
     def reduce_planar_sigmoid(self, nodes):
+        alpha = F.softmax(nodes.mailbox['e'], dim=1)
+        alpha = F.dropout(alpha, self.dropout, training=self.training)
+        msg = (alpha * nodes.mailbox['z'])
+
         w = torch.exp(self.w)
-        msg = torch.abs(nodes.mailbox['e'])
         fsum = torch.sum(torch.sigmoid(w*msg+self.b), dim=1)
-        #print(fsum)
+        
         sig_in = torch.clamp(fsum/torch.max(fsum), 0.000001, 0.9999999)
-        #maxn = torch.max(torch.abs(fsum))
-        #sig_in = torch.clamp(0.99*fsum/maxn+0.05,.0001,.0099)
+        
+        """ print("max: ", torch.max(fsum))
+        print("min: ", torch.min(fsum)) """
+
         out_h = (torch.log(sig_in/(1-sig_in))-self.b)/w
+        return {'h': out_h}
+
+    def reduce_tanh(self, nodes):
+        alpha = F.softmax(nodes.mailbox['e'], dim=1)
+        alpha = F.dropout(alpha, self.dropout, training=self.training)
+        msg = (alpha * nodes.mailbox['z'])
+
+        w = torch.exp(self.w)
+        msg = w * msg + self.b
+        
+        fsum = torch.clamp(torch.sum(torch.tanh(msg), dim=1), -0.9999999, 0.9999999)
+        
+        """ print("max: ", torch.max(fsum))
+        print("min: ", torch.min(fsum)) """
+
+        out_h = (torch.atanh(fsum) - self.b) / w
         return {'h': out_h}
         
     def reduce_planar_leaky(self, nodes):
