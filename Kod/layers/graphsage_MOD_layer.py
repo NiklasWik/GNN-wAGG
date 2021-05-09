@@ -50,6 +50,8 @@ class GraphSageLayer(nn.Module):
             self._reducer = self.reduce_tanh
             self.w = nn.Parameter(torch.rand(in_feats)-4.5)
             self.b = nn.Parameter((torch.rand(in_feats)*0.01-0.01))
+        elif aggregator_type == "planar_tanh":
+            self._reducer = self.reduce_sum
         else:
             self.aggregator = MeanAggregator()
             print("DU KÖR MED MEAN??? DET HÄR FUNKAR INTE")
@@ -61,6 +63,9 @@ class GraphSageLayer(nn.Module):
 
     def maxreduce(self, nodes):
         return {'c': torch.max(nodes.mailbox['m'], dim=1)}
+    
+    def reduce_sum(self, nodes):
+        return {'c': torch.sum(nodes.mailbox['m'], dim=1)}
 
     def reduce_p(self, nodes):
         #p = torch.clamp(self.aggregator.power,1,100)
