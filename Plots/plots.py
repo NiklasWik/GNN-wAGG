@@ -11,7 +11,7 @@ res = res.replace(to_replace="pnorm", value="p-norm")
 res = res.replace(to_replace="planar_sig", value="planar$_{\mathrm{sig}}$")
 res = res.replace(to_replace="planar_tanh", value="planar$_{\mathrm{tanh}}$")
 datasets = [res[res.DATA=="PATTERN"], res[res.DATA=="CLUSTER"]]
-colors = ["#3498DB","#e74c3c","#34495e","#2ecc71"]
+colors = ["#3498DB","#e74c3c","#FFD548","#2ecc71"]
 yvec = ["TEST_ACC", "TRAIN_ACC"]
 
 for _,yuse in enumerate(yvec):
