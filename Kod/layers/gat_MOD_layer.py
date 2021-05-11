@@ -96,7 +96,7 @@ class CustomGATHeadLayer(nn.Module):
         elif neighbor_aggr == "planar_leaky":
             raise NotImplementedError(' LeakyReLU not implemented in layer.')
             #self._reduce = self.reduce_planar_leaky
-        elif neighbor_aggr == "original":
+        elif neighbor_aggr == "sum":
             self._reduce = self.reduce_func
         else:
             raise KeyError('Aggregator type {} not recognized.'.format(aggr_type))
