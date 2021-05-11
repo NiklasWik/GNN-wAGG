@@ -92,8 +92,8 @@ class GraphSageLayer(nn.Module):
         w = torch.exp(self.w)
         msg = w * nodes.mailbox['m'] + self.b
 
-        print("MSG max: ", torch.max(msg))
-        print("MSG min: ", torch.min(msg))
+        """ print("MSG max: ", torch.max(msg))
+        print("MSG min: ", torch.min(msg)) """
         
         fsum = torch.clamp(torch.sum(torch.tanh(msg), dim=1), -0.9999999, 0.9999999)
         
