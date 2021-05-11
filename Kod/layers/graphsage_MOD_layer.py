@@ -42,7 +42,7 @@ class GraphSageLayer(nn.Module):
             self.power = nn.Parameter(torch.rand(in_feats)*6+1) 
             self._reducer = self.reduce_p
         elif aggregator_type == "planar_sig":
-            print("planar_sig")
+            print("planar_sig, cluster inits")
             self._reducer = self.reduce_planar
             self.w = nn.Parameter(torch.rand(in_feats)-1)
             self.b = nn.Parameter((torch.rand(in_feats)*1-10))
@@ -81,8 +81,8 @@ class GraphSageLayer(nn.Module):
         msg = nodes.mailbox['m']
         fsum = torch.sum(torch.sigmoid(w*msg+self.b), dim=1)
         #sig_in = torch.clamp(fsum/torch.max(fsum), 0.000001, 0.9999999)
-        print(torch.max(fsum))
-        print(torch.min(fsum))
+        """ print(torch.max(fsum))
+        print(torch.min(fsum)) """
         sig_in = torch.clamp(fsum, 0.000001, 0.9999999)
         out_h = (torch.log(sig_in/(1-sig_in))-self.b)/w
         return {'c': out_h}
