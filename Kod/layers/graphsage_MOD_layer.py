@@ -47,9 +47,10 @@ class GraphSageLayer(nn.Module):
             self.w = nn.Parameter(torch.rand(in_feats)-1)
             self.b = nn.Parameter((torch.rand(in_feats)*1-10))
         elif aggregator_type == "planar_tanh":
+            print("planar_tanh, cluster inits")
             self._reducer = self.reduce_tanh
-            self.w = nn.Parameter(torch.rand(in_feats)-4.5)
-            self.b = nn.Parameter((torch.rand(in_feats)*0.01-0.01))
+            self.w = nn.Parameter(torch.rand(in_feats)-3.5)
+            self.b = nn.Parameter((torch.rand(in_feats)*0.01-0.05))
         elif aggregator_type == "sum":
             self._reducer = self.reduce_sum
         else:
