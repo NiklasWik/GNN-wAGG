@@ -1,0 +1,126 @@
+\begin{tabular}{llllrrrrrrrrl}
+\toprule
+{} &    GNN &     DATA &                       AGG &  SEED &  Layers &  Params &   TEST\_ACC &  TRAIN\_ACC &  EPOCHS &  EPOCH TIME (s) &  TOTAL TIME (h) &                   GPU \\
+\midrule
+0   &  GATED &  PATTERN &                    p-norm &    41 &       4 &  104283 &  85.701300 &  85.942500 &   51.00 &        146.6600 &        2.130000 &        P100-PCIE-16GB \\
+1   &  GATED &  PATTERN &                    p-norm &    35 &       4 &  104283 &  85.706200 &  85.940600 &   56.00 &        146.7200 &        2.330000 &        P100-PCIE-16GB \\
+2   &  GATED &  PATTERN &                    p-norm &    12 &       4 &  104283 &  85.682800 &  85.962700 &   75.00 &        146.4900 &        3.100000 &        P100-PCIE-16GB \\
+3   &  GATED &  PATTERN &                    p-norm &    95 &       4 &  104283 &  85.662800 &  85.785100 &   44.00 &        147.1500 &        1.850000 &        P100-PCIE-16GB \\
+4   &  GATED &  CLUSTER &                    p-norm &    41 &       4 &  104635 &  57.770100 &  57.853800 &   64.00 &        112.0300 &        2.030600 &        P100-PCIE-16GB \\
+5   &  GATED &  CLUSTER &                    p-norm &    95 &       4 &  104635 &  63.771300 &  63.850600 &  101.00 &        111.9200 &        3.179000 &        P100-PCIE-16GB \\
+6   &  GATED &  CLUSTER &                    p-norm &    12 &       4 &  104635 &  60.623700 &  62.451200 &   71.00 &         85.9524 &        1.725886 &        P100-PCIE-16GB \\
+7   &  GATED &  CLUSTER &                    p-norm &    35 &       4 &  104635 &  64.010900 &  64.242000 &   87.00 &        111.8500 &        2.741903 &        P100-PCIE-16GB \\
+8   &    GIN &  PATTERN &                    p-norm &    41 &       4 &  101324 &  85.552000 &  86.076400 &   59.00 &        133.9065 &        2.246766 &        P100-PCIE-16GB \\
+9   &    GIN &  PATTERN &                    p-norm &    95 &       4 &  101324 &  85.407900 &  86.279500 &   73.00 &        114.6321 &        2.366600 &        P100-PCIE-16GB \\
+10  &    GIN &  PATTERN &                    p-norm &    12 &       4 &  101324 &  85.550300 &  86.370300 &   74.00 &         92.6039 &        1.939800 &        V100-SXM2-16GB \\
+11  &    GIN &  PATTERN &                    p-norm &    35 &       4 &  101324 &  85.471900 &  86.191700 &   65.00 &         93.1292 &        1.713482 &        V100-SXM2-16GB \\
+12  &    GIN &  PATTERN &                    p-norm &    41 &      16 &  510558 &  85.503200 &  86.014700 &   63.00 &        564.7826 &       10.090656 &             P100-PCIE \\
+13  &    GIN &  PATTERN &                    p-norm &    53 &      16 &  510558 &  85.550500 &  85.807300 &   64.00 &        476.2562 &        8.648228 &             V100-SXM2 \\
+14  &    GIN &  PATTERN &                    p-norm &    76 &      16 &  510558 &  85.229300 &  85.645900 &   50.00 &        462.1258 &        6.596108 &             V100-SXM2 \\
+15  &    GIN &  PATTERN &                    p-norm &    12 &      16 &  510558 &  85.462600 &  86.269700 &   48.00 &        566.5533 &        7.760995 &             P100-PCIE \\
+16  &    GIN &  CLUSTER &                    p-norm &    41 &       4 &  103984 &  60.623700 &  62.451200 &   71.00 &         85.9524 &        1.725886 &        P100-PCIE-16GB \\
+17  &    GIN &  CLUSTER &                    p-norm &    95 &       4 &  103984 &  60.125300 &  62.007900 &   65.00 &         79.9516 &        1.432000 &        V100-SXM2-16GB \\
+18  &    GIN &  CLUSTER &                    p-norm &    12 &       4 &  103984 &  62.054300 &  64.710400 &   84.00 &         79.3796 &        1.881500 &        V100-SXM2-16GB \\
+19  &    GIN &  CLUSTER &                    p-norm &    35 &       4 &  103984 &  57.987900 &  59.711300 &   68.00 &         79.2676 &        1.526800 &        V100-SXM2-16GB \\
+20  &    GIN &  CLUSTER &  planar\$\_\{\textbackslash mathrm\{tanh\}\}\$ &    41 &       4 &  104424 &  45.226300 &  45.529770 &   61.00 &         71.7502 &        1.244690 &        P100-PCIE-16GB \\
+21  &    GIN &  CLUSTER &  planar\$\_\{\textbackslash mathrm\{tanh\}\}\$ &    35 &       4 &  104424 &  45.886400 &  46.123340 &   72.00 &         72.4093 &        1.476850 &        P100-PCIE-16GB \\
+22  &    GIN &  CLUSTER &  planar\$\_\{\textbackslash mathrm\{tanh\}\}\$ &    12 &       4 &  104424 &  46.530400 &  46.723000 &   54.00 &         71.7279 &        1.104120 &        P100-PCIE-16GB \\
+23  &    GIN &  CLUSTER &  planar\$\_\{\textbackslash mathrm\{tanh\}\}\$ &    95 &       4 &  104424 &  43.239900 &  43.198700 &     NaN &             NaN &        1.159170 &        P100-PCIE-16GB \\
+24  &    GIN &  CLUSTER &   planar\$\_\{\textbackslash mathrm\{sig\}\}\$ &    41 &       4 &  104424 &  48.556200 &  48.678700 &   96.00 &         65.5399 &        1.773900 &        P100-PCIE-16GB \\
+25  &    GIN &  CLUSTER &   planar\$\_\{\textbackslash mathrm\{sig\}\}\$ &    35 &       4 &  104424 &  50.313300 &  50.554100 &  123.00 &         65.8434 &        2.275500 &        P100-PCIE-16GB \\
+26  &    GIN &  CLUSTER &   planar\$\_\{\textbackslash mathrm\{sig\}\}\$ &    12 &       4 &  104424 &  51.492300 &  51.784700 &  175.00 &         65.8482 &        3.226700 &        P100-PCIE-16GB \\
+27  &    GIN &  CLUSTER &   planar\$\_\{\textbackslash mathrm\{sig\}\}\$ &    95 &       4 &  104424 &  50.494500 &  50.804700 &  122.00 &         65.4069 &        2.241900 &        P100-PCIE-16GB \\
+28  &    GAT &  PATTERN &                    p-norm &    41 &       4 &  110544 &  85.663000 &  86.120500 &   63.00 &        382.9778 &        6.850500 &        P100-PCIE-16GB \\
+29  &    GAT &  PATTERN &                    p-norm &    35 &       4 &  110544 &  85.692000 &  86.033900 &   57.00 &        386.4939 &        6.270500 &        P100-PCIE-16GB \\
+30  &    GAT &  PATTERN &                    p-norm &    12 &       4 &  110544 &  85.640000 &  85.933300 &   59.00 &        388.8478 &        6.525600 &        P100-PCIE-16GB \\
+31  &    GAT &  PATTERN &                    p-norm &    95 &       4 &  110544 &  85.686100 &  85.858500 &   51.00 &        386.5650 &        5.626800 &        P100-PCIE-16GB \\
+32  &    GAT &  CLUSTER &                    p-norm &    41 &       4 &  111308 &  61.446900 &  62.572100 &  105.00 &        236.7002 &        7.001700 &        P100-PCIE-16GB \\
+33  &    GAT &  CLUSTER &                    p-norm &    35 &       4 &  111308 &  60.917200 &  62.259000 &   92.00 &        247.7212 &        6.435700 &        V100-SXM2-16GB \\
+34  &    GAT &  CLUSTER &                    p-norm &    12 &       4 &  111308 &  60.658200 &  61.544900 &   86.00 &        231.5266 &        5.626600 &        P100-PCIE-16GB \\
+35  &    GAT &  CLUSTER &                    p-norm &    95 &       4 &  111308 &  61.436400 &  62.599200 &   85.00 &        233.0982 &        5.600400 &        P100-PCIE-16GB \\
+36  &   SAGE &  PATTERN &                    p-norm &    41 &       4 &  102095 &  85.742000 &  86.226100 &   71.00 &        126.4590 &        2.543151 &             P100-PCIE \\
+37  &   SAGE &  PATTERN &                    p-norm &    95 &       4 &  102095 &  85.761200 &  86.037700 &   62.00 &        126.9375 &        2.235534 &             P100-PCIE \\
+38  &   SAGE &  PATTERN &                    p-norm &    12 &       4 &  102095 &  85.712300 &  86.254200 &   76.00 &        125.0710 &        2.688848 &             P100-PCIE \\
+39  &   SAGE &  PATTERN &                    p-norm &    35 &       4 &  102095 &  85.666200 &  86.077900 &   63.00 &        127.0316 &        2.272440 &             P100-PCIE \\
+40  &   SAGE &  PATTERN &  planar\$\_\{\textbackslash mathrm\{tanh\}\}\$ &    41 &       4 &  102451 &  84.890780 &  84.774130 &   77.00 &         96.8197 &        2.107610 &        P100-PCIE-16GB \\
+41  &   SAGE &  PATTERN &  planar\$\_\{\textbackslash mathrm\{tanh\}\}\$ &    95 &       4 &  102451 &  84.825379 &  84.698260 &   69.00 &         96.9761 &        1.896300 &        P100-PCIE-16GB \\
+42  &   SAGE &  PATTERN &  planar\$\_\{\textbackslash mathrm\{tanh\}\}\$ &    12 &       4 &  102451 &  84.849020 &  84.691210 &   68.00 &         96.9627 &        1.868100 &        P100-PCIE-16GB \\
+43  &   SAGE &  PATTERN &  planar\$\_\{\textbackslash mathrm\{tanh\}\}\$ &    35 &       4 &  102451 &  84.801970 &  84.712190 &   63.00 &         97.1167 &        1.737200 &        P100-PCIE-16GB \\
+44  &   SAGE &  CLUSTER &                    p-norm &    41 &       4 &  102543 &  63.312500 &  64.276700 &   83.00 &         68.6495 &        1.609040 &        P100-PCIE-16GB \\
+45  &   SAGE &  CLUSTER &                    p-norm &    95 &       4 &  102543 &  62.651900 &  63.524200 &   82.00 &         70.1355 &        1.624729 &        P100-PCIE-16GB \\
+46  &   SAGE &  CLUSTER &                    p-norm &    12 &       4 &  102543 &  62.661100 &  63.485000 &   76.00 &         69.8948 &        1.502672 &        P100-PCIE-16GB \\
+47  &   SAGE &  CLUSTER &                    p-norm &    35 &       4 &  102543 &  64.191100 &  65.192600 &   95.00 &         68.5930 &        1.837350 &        P100-PCIE-16GB \\
+48  &   SAGE &  CLUSTER &   planar\$\_\{\textbackslash mathrm\{sig\}\}\$ &    41 &       4 &  102899 &  54.459400 &  54.208500 &   66.00 &         57.5545 &        1.080000 &        P100-PCIE-16GB \\
+49  &   SAGE &  CLUSTER &   planar\$\_\{\textbackslash mathrm\{sig\}\}\$ &    35 &       4 &  102899 &  53.538200 &  53.473500 &   64.00 &         58.3222 &        1.060000 &        P100-PCIE-16GB \\
+50  &   SAGE &  CLUSTER &   planar\$\_\{\textbackslash mathrm\{sig\}\}\$ &    12 &       4 &  102899 &  54.292800 &  54.400300 &   60.00 &         57.7173 &        0.980000 &        P100-PCIE-16GB \\
+51  &   SAGE &  CLUSTER &   planar\$\_\{\textbackslash mathrm\{sig\}\}\$ &    95 &       4 &  102899 &  57.068000 &  57.054000 &   94.00 &         58.0001 &        1.540000 &        P100-PCIE-16GB \\
+52  &   SAGE &  CLUSTER &  planar\$\_\{\textbackslash mathrm\{tanh\}\}\$ &    41 &       4 &  102899 &  55.178000 &  55.344700 &   72.00 &         56.6702 &        1.160000 &        P100-PCIE-16GB \\
+53  &   SAGE &  CLUSTER &  planar\$\_\{\textbackslash mathrm\{tanh\}\}\$ &    35 &       4 &  102899 &  48.678600 &  48.774400 &   65.00 &             NaN &        1.040000 &        P100-PCIE-16GB \\
+54  &   SAGE &  CLUSTER &  planar\$\_\{\textbackslash mathrm\{tanh\}\}\$ &    12 &       4 &  102899 &  52.731600 &  52.876700 &   56.00 &         56.7419 &        0.910000 &        P100-PCIE-16GB \\
+55  &   SAGE &  CLUSTER &  planar\$\_\{\textbackslash mathrm\{tanh\}\}\$ &    95 &       4 &  102899 &  50.398400 &  50.606700 &   50.00 &         56.9326 &        0.810000 &        P100-PCIE-16GB \\
+56  &  GATED &  PATTERN &  planar\$\_\{\textbackslash mathrm\{tanh\}\}\$ &    41 &       4 &  104563 &  85.079400 &  84.962100 &   79.00 &        133.1000 &        2.970000 &        P100-PCIE-16GB \\
+57  &  GATED &  PATTERN &  planar\$\_\{\textbackslash mathrm\{tanh\}\}\$ &    35 &       4 &  104563 &  84.978300 &  84.835400 &   76.00 &         89.6100 &        1.930000 &        V100-SXM2-16GB \\
+58  &  GATED &  PATTERN &  planar\$\_\{\textbackslash mathrm\{tanh\}\}\$ &    12 &       4 &  104563 &  84.775100 &  84.726900 &   54.00 &         90.8100 &        1.400000 &        V100-SXM2-16GB \\
+59  &  GATED &  PATTERN &  planar\$\_\{\textbackslash mathrm\{tanh\}\}\$ &    95 &       4 &  104563 &  85.039000 &  84.953700 &   54.00 &        133.9100 &        2.010000 &        P100-PCIE-16GB \\
+60  &  GATED &  CLUSTER &  planar\$\_\{\textbackslash mathrm\{tanh\}\}\$ &    41 &       4 &  104915 &  43.516393 &  43.697751 &   63.00 &         97.0381 &        1.736681 &        P100-PCIE-16GB \\
+61  &  GATED &  CLUSTER &  planar\$\_\{\textbackslash mathrm\{tanh\}\}\$ &    95 &       4 &  104915 &  43.873610 &  44.123956 &   69.00 &         95.1928 &        1.861858 &        P100-PCIE-16GB \\
+62  &  GATED &  CLUSTER &  planar\$\_\{\textbackslash mathrm\{tanh\}\}\$ &    12 &       4 &  104915 &  44.842920 &  44.798505 &   83.00 &         96.5250 &        2.262547 &        P100-PCIE-16GB \\
+63  &  GATED &  CLUSTER &  planar\$\_\{\textbackslash mathrm\{tanh\}\}\$ &    35 &       4 &  104915 &  43.130582 &  43.494860 &   70.00 &         96.7165 &        1.919844 &        P100-PCIE-16GB \\
+64  &  GATED &  CLUSTER &   planar\$\_\{\textbackslash mathrm\{sig\}\}\$ &    41 &       4 &  104915 &  54.619300 &  54.786777 &  158.00 &         84.3299 &        3.733389 &        P100-PCIE-16GB \\
+65  &  GATED &  CLUSTER &   planar\$\_\{\textbackslash mathrm\{sig\}\}\$ &    95 &       4 &  104915 &  62.794981 &  63.085727 &  215.00 &         84.4682 &        5.076148 &        P100-PCIE-16GB \\
+66  &  GATED &  CLUSTER &   planar\$\_\{\textbackslash mathrm\{sig\}\}\$ &    12 &       4 &  104915 &  57.852190 &  58.086112 &  246.00 &         84.5683 &        5.810436 &        P100-PCIE-16GB \\
+67  &  GATED &  CLUSTER &   planar\$\_\{\textbackslash mathrm\{sig\}\}\$ &    35 &       4 &  104915 &  49.720481 &  49.916184 &  114.00 &         84.7838 &        2.716746 &        P100-PCIE-16GB \\
+68  &  GATED &  PATTERN &   planar\$\_\{\textbackslash mathrm\{sig\}\}\$ &    41 &       4 &  104563 &  85.077066 &  85.035289 &   75.00 &        134.8348 &        2.858415 &        P100-PCIE-16GB \\
+69  &  GATED &  PATTERN &   planar\$\_\{\textbackslash mathrm\{sig\}\}\$ &    95 &       4 &  104563 &  85.092075 &  84.963025 &   92.00 &        134.4950 &        3.486382 &        P100-PCIE-16GB \\
+70  &  GATED &  PATTERN &   planar\$\_\{\textbackslash mathrm\{sig\}\}\$ &    12 &       4 &  104563 &  85.112798 &  84.948081 &   99.00 &        134.0470 &        3.735606 &        P100-PCIE-16GB \\
+71  &  GATED &  PATTERN &   planar\$\_\{\textbackslash mathrm\{sig\}\}\$ &    35 &       4 &  104563 &  85.089187 &  85.024083 &   87.00 &        133.6987 &        3.279791 &        P100-PCIE-16GB \\
+72  &   SAGE &  PATTERN &   planar\$\_\{\textbackslash mathrm\{sig\}\}\$ &    41 &       4 &  102451 &  84.868200 &  84.780400 &   68.00 &         99.5200 &        1.918500 &        P100-PCIE-16GB \\
+73  &   SAGE &  PATTERN &   planar\$\_\{\textbackslash mathrm\{sig\}\}\$ &    95 &       4 &  102451 &  85.346300 &  85.298300 &   91.00 &         99.4910 &        2.553400 &        P100-PCIE-16GB \\
+74  &   SAGE &  PATTERN &   planar\$\_\{\textbackslash mathrm\{sig\}\}\$ &    12 &       4 &  102451 &  84.968300 &  84.928700 &   87.00 &         99.7847 &        2.450000 &        P100-PCIE-16GB \\
+75  &   SAGE &  PATTERN &   planar\$\_\{\textbackslash mathrm\{sig\}\}\$ &    35 &       4 &  102451 &  85.108700 &  85.056400 &   75.00 &         99.0247 &        2.126400 &        P100-PCIE-16GB \\
+76  &    GIN &  PATTERN &   planar\$\_\{\textbackslash mathrm\{sig\}\}\$ &    41 &       4 &  101764 &  84.120800 &  84.051200 &   73.00 &        112.6635 &        2.326007 &        P100-PCIE-16GB \\
+77  &    GIN &  PATTERN &   planar\$\_\{\textbackslash mathrm\{sig\}\}\$ &    95 &       4 &  101764 &  85.365500 &  85.365500 &   75.00 &        113.0605 &        2.398297 &        P100-PCIE-16GB \\
+78  &    GIN &  PATTERN &   planar\$\_\{\textbackslash mathrm\{sig\}\}\$ &    12 &       4 &  101764 &  84.719200 &  84.710700 &   59.00 &        112.5369 &        1.885958 &        P100-PCIE-16GB \\
+79  &    GIN &  PATTERN &   planar\$\_\{\textbackslash mathrm\{sig\}\}\$ &    35 &       4 &  101764 &  85.314900 &  85.316900 &   60.00 &        112.5289 &        1.917095 &        P100-PCIE-16GB \\
+80  &    GIN &  PATTERN &  planar\$\_\{\textbackslash mathrm\{tanh\}\}\$ &    41 &       4 &  101764 &  85.684500 &  85.636289 &   69.00 &        122.1062 &        2.387606 &        P100-PCIE-16GB \\
+81  &    GIN &  PATTERN &  planar\$\_\{\textbackslash mathrm\{tanh\}\}\$ &    95 &       4 &  101764 &  85.641800 &  85.569618 &   61.00 &        120.2373 &        2.083859 &        P100-PCIE-16GB \\
+82  &    GIN &  PATTERN &  planar\$\_\{\textbackslash mathrm\{tanh\}\}\$ &    12 &       4 &  101764 &  85.591500 &  85.444629 &   54.00 &        120.2791 &        1.850949 &        P100-PCIE-16GB \\
+83  &    GIN &  PATTERN &  planar\$\_\{\textbackslash mathrm\{tanh\}\}\$ &    35 &       4 &  101764 &  85.671300 &  85.564567 &   61.00 &        121.7220 &        2.111166 &        P100-PCIE-16GB \\
+84  &    GAT &  CLUSTER &   planar\$\_\{\textbackslash mathrm\{sig\}\}\$ &    41 &       4 &  111916 &  53.732015 &  54.008424 &   92.00 &        215.1918 &        5.594347 &  Tesla V100-SXM2-16GB \\
+85  &    GAT &  CLUSTER &   planar\$\_\{\textbackslash mathrm\{sig\}\}\$ &    35 &       4 &  111916 &  56.175405 &  56.244096 &  108.00 &        220.1139 &        6.699531 &  Tesla V100-SXM2-16GB \\
+86  &    GAT &  CLUSTER &   planar\$\_\{\textbackslash mathrm\{sig\}\}\$ &    12 &       4 &  111916 &  55.547744 &  55.901571 &  105.00 &        215.3919 &        6.374155 &  Tesla V100-SXM2-16GB \\
+87  &    GAT &  CLUSTER &   planar\$\_\{\textbackslash mathrm\{sig\}\}\$ &    95 &       4 &  111916 &  55.580738 &  56.416825 &   79.00 &        209.0476 &        4.676175 &  Tesla P100-PCIE-16GB \\
+88  &    GAT &  PATTERN &  planar\$\_\{\textbackslash mathrm\{tanh\}\}\$ &    41 &       4 &  111152 &  85.587196 &  85.503023 &   49.00 &        309.4264 &        4.339054 &        P100-PCIE-16GB \\
+89  &    GAT &  PATTERN &  planar\$\_\{\textbackslash mathrm\{tanh\}\}\$ &    35 &       4 &  111152 &  85.509986 &  85.402594 &   45.00 &        325.7479 &        4.209863 &        P100-PCIE-16GB \\
+90  &    GAT &  PATTERN &  planar\$\_\{\textbackslash mathrm\{tanh\}\}\$ &    12 &       4 &  111152 &  85.615350 &  85.484541 &   52.00 &        312.4726 &        4.646114 &        P100-PCIE-16GB \\
+91  &    GAT &  PATTERN &  planar\$\_\{\textbackslash mathrm\{tanh\}\}\$ &    95 &       4 &  111152 &  85.646186 &  85.561001 &   57.00 &        308.5440 &        5.013438 &        P100-PCIE-16GB \\
+92  &  GATED &  PATTERN &                       sum &     1 &       4 &  104003 &  84.358000 &  84.319000 &   78.75 &        139.0100 &        3.090000 &                   NaN \\
+93  &  GATED &  PATTERN &                       sum &     1 &       4 &  104003 &  84.602000 &  84.629000 &   78.75 &        139.0100 &        3.090000 &                   NaN \\
+94  &  GATED &  CLUSTER &                       sum &     1 &       4 &  104355 &  60.823000 &  62.154000 &   94.50 &         79.9700 &        2.130000 &                   NaN \\
+95  &  GATED &  CLUSTER &                       sum &     1 &       4 &  104355 &  59.985000 &  61.082000 &   94.50 &         79.9700 &        2.130000 &                   NaN \\
+96  &    GIN &  PATTERN &                       sum &     1 &       4 &  100884 &  85.579000 &  85.822000 &   93.00 &         15.2400 &        0.400000 &                   NaN \\
+97  &    GIN &  PATTERN &                       sum &     1 &       4 &  100884 &  85.601000 &  85.882000 &   93.00 &         15.2400 &        0.400000 &                   NaN \\
+98  &    GIN &  CLUSTER &                       sum &     1 &       4 &  103544 &  58.148000 &  59.143000 &   74.75 &         10.7100 &        0.230000 &                   NaN \\
+99  &    GIN &  CLUSTER &                       sum &     1 &       4 &  103544 &  58.620000 &  59.817000 &   74.75 &         10.7100 &        0.230000 &                   NaN \\
+100 &    GAT &  PATTERN &                       sum &     1 &       4 &  109936 &  74.001000 &  76.251000 &   96.00 &         20.9200 &        0.570000 &                   NaN \\
+101 &    GAT &  PATTERN &                       sum &     1 &       4 &  109936 &  77.647000 &  79.515000 &   96.00 &         20.9200 &        0.570000 &                   NaN \\
+102 &    GAT &  CLUSTER &                       sum &     1 &       4 &  110700 &  57.409000 &  57.989000 &   67.25 &         14.1700 &        0.270000 &                   NaN \\
+103 &    GAT &  CLUSTER &                       sum &     1 &       4 &  110700 &  58.055000 &  58.673000 &   67.25 &         14.1700 &        0.270000 &                   NaN \\
+104 &   SAGE &  CLUSTER &                       sum &    41 &       4 &  102187 &  60.582200 &  61.130000 &   77.00 &         43.0374 &        0.940000 &        V100-SXM2-16GB \\
+105 &   SAGE &  CLUSTER &                       sum &    95 &       4 &  102187 &  59.052700 &  59.862200 &   76.00 &         41.8523 &        0.900000 &        V100-SXM2-16GB \\
+106 &   SAGE &  CLUSTER &                       sum &    12 &       4 &  102187 &  59.782700 &  60.419600 &   64.00 &         42.4078 &        0.770000 &        V100-SXM2-16GB \\
+107 &   SAGE &  CLUSTER &                       sum &    35 &       4 &  102187 &  59.375700 &  59.936400 &   63.00 &         42.6074 &        0.760000 &        V100-SXM2-16GB \\
+108 &   SAGE &  PATTERN &                       sum &    41 &       4 &  101739 &  85.658500 &  85.842100 &   75.00 &         96.3649 &        2.044000 &        P100-PCIE-16GB \\
+109 &   SAGE &  PATTERN &                       sum &    95 &       4 &  101739 &  85.727100 &  85.772800 &   68.00 &         98.3417 &        1.895900 &        P100-PCIE-16GB \\
+110 &   SAGE &  PATTERN &                       sum &    12 &       4 &  101739 &  85.681900 &  85.756100 &   69.00 &         97.6044 &        1.909000 &        P100-PCIE-16GB \\
+111 &   SAGE &  PATTERN &                       sum &    35 &       4 &  101739 &  85.659900 &  85.771600 &   64.00 &         96.0141 &        1.744000 &        P100-PCIE-16GB \\
+112 &    GAT &  CLUSTER &  planar\$\_\{\textbackslash mathrm\{tanh\}\}\$ &    41 &       4 &  111916 &  54.945804 &  55.022582 &   78.00 &        191.3351 &        4.229276 &  Tesla P100-PCIE-16GB \\
+113 &    GAT &  CLUSTER &  planar\$\_\{\textbackslash mathrm\{tanh\}\}\$ &    35 &       4 &  111916 &  55.209168 &  55.301677 &   74.00 &        190.3122 &        3.993045 &  Tesla P100-PCIE-16GB \\
+114 &    GAT &  CLUSTER &  planar\$\_\{\textbackslash mathrm\{tanh\}\}\$ &    12 &       4 &  111916 &  57.080583 &  57.437633 &   66.00 &        190.1666 &        3.567226 &  Tesla P100-PCIE-16GB \\
+115 &    GAT &  CLUSTER &  planar\$\_\{\textbackslash mathrm\{tanh\}\}\$ &    95 &       4 &  111916 &  56.463313 &  56.538181 &   56.00 &        194.0135 &        3.101350 &  Tesla P100-PCIE-16GB \\
+116 &    GAT &  PATTERN &   planar\$\_\{\textbackslash mathrm\{sig\}\}\$ &    41 &       4 &  111152 &  85.453849 &  85.396945 &   84.00 &        344.6494 &        8.188274 &        P100-PCIE-16GB \\
+117 &    GAT &  PATTERN &   planar\$\_\{\textbackslash mathrm\{sig\}\}\$ &    35 &       4 &  111152 &  85.475220 &  85.415750 &   89.00 &        345.0124 &        8.679620 &        P100-PCIE-16GB \\
+118 &    GAT &  PATTERN &   planar\$\_\{\textbackslash mathrm\{sig\}\}\$ &    12 &       4 &  111152 &  85.475220 &  85.415750 &   89.00 &        345.0124 &        8.679620 &        P100-PCIE-16GB \\
+119 &    GAT &  PATTERN &   planar\$\_\{\textbackslash mathrm\{sig\}\}\$ &    95 &       4 &  111152 &  84.787923 &  84.830275 &   54.00 &        334.2024 &        5.155179 &        P100-PCIE-16GB \\
+\bottomrule
+\end{tabular}
