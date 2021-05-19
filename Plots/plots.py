@@ -15,7 +15,8 @@ res = res.replace(to_replace="planar_tanh", value="planar$_{\mathrm{tanh}}$")
 datasets = [res[res.DATA=="PATTERN"], res[res.DATA=="CLUSTER"]]
 colors = ["#3498DB","#e74c3c","#FFD548","#2ecc71"]
 
-if False:
+#Result plots
+if True:
     yvec = ["TEST_ACC", "TRAIN_ACC"]
     for _,yuse in enumerate(yvec):
         for _,dataset in enumerate(datasets):
@@ -25,9 +26,9 @@ if False:
             g.set_ylabels("Accuracy (%)")
             plt.title(yuse[:-4].title()+"ing accuracy, (" + dataset.iloc[0]['DATA'] +")")
             plt.savefig(str(pathlib.Path(__file__).parent.absolute())+"//"+yuse[:-4].replace(" ", "")+"-" + dataset.iloc[0]['DATA']+".eps", bbox_inches="tight", format="eps")
-    plt.show()
 
-if False:
+#Time plots
+if True:
     yvec = ["EPOCHS", "EPOCH TIME (s)", "TOTAL TIME (h)"]
     ylabs = ["Number of epochs (#)", "Time per epoch (s)", "Total training time (h)"]
     for i,yuse in enumerate(yvec):
@@ -38,15 +39,15 @@ if False:
             g.set_ylabels(ylabs[i])
             plt.title(yuse[0:10].title()+", (" + dataset.iloc[0]['DATA'] +")")
             plt.savefig(str(pathlib.Path(__file__).parent.absolute())+"//"+yuse[0:10].replace(" ", "")+"-" + dataset.iloc[0]['DATA']+".eps", bbox_inches="tight", format="eps")
-    plt.show()
 
+#Tables
 if True:
     gnns = ["GATED", "SAGE", "GAT", "GIN"]
     dset = ["PATTERN", "CLUSTER"]
     for j,data in enumerate(datasets):
         pd.options.display.float_format = '{:,.3f}'.format
         for i,df in enumerate([data[data.GNN==x] for x in gnns]):
-            df = data.groupby(['AGG'], as_index=False).agg({'Layers':'mean', 'Params':'mean', 'TEST_ACC':['mean','std'], 'TRAIN_ACC':['mean','std'], 'EPOCHS':'mean', 'EPOCH TIME (s)':'mean', 'TOTAL TIME (h)':'mean'})
+            df = df.groupby(['AGG'], as_index=False).agg({'Layers':'mean', 'Params':'mean', 'TEST_ACC':['mean','std'], 'TRAIN_ACC':['mean','std'], 'EPOCHS':'mean', 'EPOCH TIME (s)':'mean', 'TOTAL TIME (h)':'mean'})
             for asd in ["TEST_ACC", "TRAIN_ACC"]:
                 df[asd] = df[asd]['mean'].round(3).astype(str)+'±'+df[asd]['std'].round(3).astype(str)
             df = df.drop('std', axis=1, level=1)
